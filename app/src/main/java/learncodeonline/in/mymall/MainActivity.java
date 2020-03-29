@@ -116,17 +116,17 @@ public class MainActivity extends AppCompatActivity implements
 
         int id = menuItem.getItemId();
         if(id == R.id.nav_my_mall){
-
+           return true;
         }else if(id == R.id.nav_my_orders){
-
+            return true;
         }else if(id == R.id.nav_my_rewards){
-
+            return true;
         }else if(id == R.id.nav_my_cart){
-
+            return true;
         }else if(id == R.id.nav_my_wishlist){
-
+            return true;
         }else if(id == R.id.nav_my_account){
-
+            return true;
         }else if(id == R.id.nav_sign_out){
 
         }
