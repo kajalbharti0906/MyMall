@@ -11,13 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,12 @@ public class HomeFragment extends Fragment {
     private ConstraintLayout stripAdContainer;
 
     /////////// Strip Ad
+
+    /////////// Horizontal Product
+    private TextView horizontalLayoutTitle;
+    private Button horizontalviewAllbtn;
+    private RecyclerView horizontalRecyclerView;
+    /////////// Horizontal Product
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -149,6 +156,30 @@ public class HomeFragment extends Fragment {
         stripAdContainer.setBackgroundColor(Color.parseColor("#FFFFFF"));
         /////////// Strip Ad
 
+        /////////// Horizontal Product
+        horizontalLayoutTitle = view.findViewById(R.id.hs_layout_title);
+        horizontalviewAllbtn = view.findViewById(R.id.hs_view_all);
+        horizontalRecyclerView = view.findViewById(R.id.hs_layout_recycler_view);
+
+        List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
+
+        HorizontalProductScrollAdapter horizontalProductScrollAdapter = new HorizontalProductScrollAdapter(horizontalProductScrollModelList);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        horizontalRecyclerView.setLayoutManager(linearLayoutManager);
+
+
+        horizontalRecyclerView.setAdapter(horizontalProductScrollAdapter);
+        horizontalProductScrollAdapter.notifyDataSetChanged();
+        /////////// Horizontal Product
         return view;
     }
 
