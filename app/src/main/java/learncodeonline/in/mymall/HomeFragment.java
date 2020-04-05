@@ -41,12 +41,12 @@ public class HomeFragment extends Fragment {
     private CategoryAdapter categoryAdapter;
 
     /////////// Banner Slider
-     private ViewPager bannerSliderViewPager;
-     private List<SliderModel> sliderModelList;
-     private int currentPage = 2;
-     private Timer timer;
-     final private long DELAY_TIME = 2000;
-     final private long PERIOD_TIME = 2000;
+    private ViewPager bannerSliderViewPager;
+    private List<SliderModel> sliderModelList;
+    private int currentPage = 2;
+    private Timer timer;
+    final private long DELAY_TIME = 2000;
+    final private long PERIOD_TIME = 2000;
     /////////// Banner Slider
 
     /////////// Strip Ad
@@ -190,6 +190,26 @@ public class HomeFragment extends Fragment {
         gridView.setAdapter(new GridProductLayoutAdapter(horizontalProductScrollModelList));
         /////////// Grid Product Layout
 
+        /////////////////////////////////
+        RecyclerView testing = view.findViewById(R.id.testing);
+        LinearLayoutManager testingLayoutManager = new LinearLayoutManager(getContext());
+        testingLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        testing.setLayoutManager(testingLayoutManager);
+
+        List<HomePageModel> homePageModelList = new ArrayList<>();
+        homePageModelList.add(new HomePageModel(0,sliderModelList));
+        homePageModelList.add(new HomePageModel(2,"Deals of the Day!",horizontalProductScrollModelList));
+        homePageModelList.add(new HomePageModel(1,R.drawable.banner,"#FFFFFF"));
+        homePageModelList.add(new HomePageModel(3,"Deals of the Day!",horizontalProductScrollModelList));
+        homePageModelList.add(new HomePageModel(1,R.drawable.banner,"#FFFFFF"));
+        homePageModelList.add(new HomePageModel(3,"Deals of the Day!",horizontalProductScrollModelList));
+        homePageModelList.add(new HomePageModel(2,"Deals of the Day!",horizontalProductScrollModelList));
+        homePageModelList.add(new HomePageModel(1,R.drawable.banner,"#FFFFFF"));
+        homePageModelList.add(new HomePageModel(0,sliderModelList));
+        HomePageAdapter adapter = new HomePageAdapter(homePageModelList);
+        testing.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        /////////////////////////////////
         return view;
     }
 
@@ -205,7 +225,6 @@ public class HomeFragment extends Fragment {
            bannerSliderViewPager.setCurrentItem(currentPage,false);
        }
     }
-
     private void startBannerSlideShow(){
         final Handler handler = new Handler();
         final Runnable update = new Runnable() {
