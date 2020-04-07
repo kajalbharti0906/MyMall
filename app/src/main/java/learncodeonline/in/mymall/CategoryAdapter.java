@@ -1,5 +1,6 @@
 package learncodeonline.in.mymall;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +33,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public void onBindViewHolder(@NonNull CategoryAdapter.ViewHolder holder, int position) {
         String icon = categoryModelList.get(position).getCategoryIconLink();
         String name = categoryModelList.get(position).getCategoryName();
-        holder.setCategoryName(name);
+        holder.setCategory(name,position);
 
     }
 
@@ -56,8 +57,19 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
         }
 
-        private void setCategoryName(String name){
+        private void setCategory(final String name, final int position){
             categoryName.setText(name);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(position!=0) {
+                        Intent categoryIntent = new Intent(itemView.getContext(), CategoryActivity.class);
+                        categoryIntent.putExtra("CategoryName", name);
+                        itemView.getContext().startActivity(categoryIntent);
+                    }
+                }
+            });
         }
     }
 }
