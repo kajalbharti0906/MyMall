@@ -22,6 +22,10 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private ViewPager productImagesViewPager;
     private TabLayout viewpagerIndicator;
+
+    private ViewPager productDetailsViewpager;
+    private TabLayout productDetailsTabLayout;
+
     private static boolean ALREADY_ADDED_TO_WISHLIST = false;
     private FloatingActionButton addToWishlistBtn;
 
@@ -37,6 +41,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         productImagesViewPager = findViewById(R.id.product_images_viewpager);
         viewpagerIndicator = findViewById(R.id.viewpager_indicator);
         addToWishlistBtn = findViewById(R.id.add_to_wishlist_btn);
+        productDetailsViewpager = findViewById(R.id.product_details_viewPager);
+        productDetailsTabLayout = findViewById(R.id.product_details_tabLayout);
 
         List<Integer> productImages = new ArrayList<>();
         productImages.add(R.drawable.mobile_phone);
@@ -58,6 +64,26 @@ public class ProductDetailActivity extends AppCompatActivity {
                     ALREADY_ADDED_TO_WISHLIST = true;
                     addToWishlistBtn.setSupportImageTintList(getResources().getColorStateList(R.color.colorPrimary));
                 }
+            }
+        });
+
+        productDetailsViewpager.setAdapter(new ProductDetailsAdapter(getSupportFragmentManager(),productDetailsTabLayout.getTabCount()));
+
+        productDetailsViewpager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(productDetailsTabLayout));
+        productDetailsTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                productDetailsViewpager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
     }
