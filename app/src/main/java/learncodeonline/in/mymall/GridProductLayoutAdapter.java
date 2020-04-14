@@ -1,5 +1,6 @@
 package learncodeonline.in.mymall;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,12 +35,22 @@ public class GridProductLayoutAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, final ViewGroup parent) {
         View view;
         if(convertView == null){
           view = LayoutInflater.from(parent.getContext()).inflate(R.layout.horizontal_scroll_item_layout,null);
             view.setElevation(0);
             view.setBackgroundColor(Color.parseColor("#FFFFFF"));
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent productDetailsIntent = new Intent(parent.getContext(),ProductDetailActivity.class);
+                    parent.getContext().startActivity(productDetailsIntent);
+                }
+            });
+
+
             ImageView productImage = view.findViewById(R.id.hs_product_image);
             TextView productName = view.findViewById(R.id.hs_product_name);
             TextView productDescription = view.findViewById(R.id.hs_product_description);
