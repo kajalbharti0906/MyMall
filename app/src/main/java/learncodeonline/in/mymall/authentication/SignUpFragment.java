@@ -1,4 +1,4 @@
-package learncodeonline.in.mymall;
+package learncodeonline.in.mymall.authentication;
 
 
 import android.content.Intent;
@@ -33,6 +33,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+
+import learncodeonline.in.mymall.MainActivity;
+import learncodeonline.in.mymall.R;
 
 
 /**
@@ -262,7 +265,7 @@ public class SignUpFragment extends Fragment {
         }
     }
     private void mainIntent(){
-        Intent mainIntent = new Intent(getActivity(),MainActivity.class);
+        Intent mainIntent = new Intent(getActivity(), MainActivity.class);
         startActivity(mainIntent);
         getActivity().finish();
     }

@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import learncodeonline.in.mymall.product.ProductDetailActivity;
+
 public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<HorizontalProductScrollAdapter.ViewHolder> {
 
     private List<HorizontalProductScrollModel> horizontalProductScrollModelList;
@@ -68,7 +70,7 @@ public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<Horizon
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent productDetailIntent = new Intent(itemView.getContext(),ProductDetailActivity.class);
+                    Intent productDetailIntent = new Intent(itemView.getContext(), ProductDetailActivity.class);
                     itemView.getContext().startActivity(productDetailIntent);
                 }
             });

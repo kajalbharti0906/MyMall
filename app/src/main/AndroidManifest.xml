@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/mall_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ProductDetailActivity"></activity>
+        <activity android:name=".product.ProductDetailActivity"></activity>
         <activity android:name=".CategoryActivity" />
         <activity
             android:name=".MainActivity"
@@ -19,7 +19,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".authentication.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SplashActivity"

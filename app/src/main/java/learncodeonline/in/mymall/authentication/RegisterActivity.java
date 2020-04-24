@@ -1,4 +1,4 @@
-package learncodeonline.in.mymall;
+package learncodeonline.in.mymall.authentication;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -7,6 +7,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
+
+import learncodeonline.in.mymall.R;
 
 public class RegisterActivity extends AppCompatActivity {
 

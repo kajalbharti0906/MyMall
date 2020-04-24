@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import learncodeonline.in.mymall.product.ProductDetailActivity;
+
 public class GridProductLayoutAdapter extends BaseAdapter {
 
     List<HorizontalProductScrollModel> horizontalProductScrollModelList;
@@ -45,7 +47,7 @@ public class GridProductLayoutAdapter extends BaseAdapter {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent productDetailsIntent = new Intent(parent.getContext(),ProductDetailActivity.class);
+                    Intent productDetailsIntent = new Intent(parent.getContext(), ProductDetailActivity.class);
                     parent.getContext().startActivity(productDetailsIntent);
                 }
             });

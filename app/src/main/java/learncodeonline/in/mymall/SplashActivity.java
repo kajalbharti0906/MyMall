@@ -9,6 +9,8 @@ import android.os.SystemClock;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import learncodeonline.in.mymall.authentication.RegisterActivity;
+
 public class SplashActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;

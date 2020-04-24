@@ -32,7 +32,12 @@ import android.widget.FrameLayout;
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
 
+    private static final int HOME_FRAGMENT=0;
+    private static final int CART_FRAGMENT=1;
+
     private FrameLayout frameLayout;
+    private static int currentFragment;
+    private NavigationView navigationView;
 
    // private AppBarConfiguration mAppBarConfiguration;
 
@@ -51,12 +56,12 @@ public class MainActivity extends AppCompatActivity implements
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-       // navigationView.getMenu().getItem(0).setChecked(true);
+        navigationView.getMenu().getItem(0).setChecked(true);
 
         frameLayout = findViewById(R.id.main_frameLayout);
-        setFragment(new HomeFragment());
+        setFragment(new HomeFragment(),HOME_FRAGMENT);
 //         Passing each menu ID as a set of Ids because each
 //         menu should be considered as top level destinations.
 //        mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -83,7 +88,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        if(currentFragment==HOME_FRAGMENT) {
+            getMenuInflater().inflate(R.menu.main, menu);
+        }
         return true;
     }
 
@@ -96,13 +103,12 @@ public class MainActivity extends AppCompatActivity implements
         }else if(id == R.id.main_notification_icon){
              return true;
         }else if(id == R.id.main_cart_icon){
+            myCart();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
-
 
 //    @Override
 //    public boolean onSupportNavigateUp() {
@@ -116,26 +122,37 @@ public class MainActivity extends AppCompatActivity implements
 
         int id = menuItem.getItemId();
         if(id == R.id.nav_my_mall){
-           return true;
+          setFragment(new HomeFragment(),HOME_FRAGMENT);
         }else if(id == R.id.nav_my_orders){
-            return true;
+           return true;
         }else if(id == R.id.nav_my_rewards){
-            return true;
+              return true;
         }else if(id == R.id.nav_my_cart){
+            myCart();
             return true;
         }else if(id == R.id.nav_my_wishlist){
-            return true;
+             return true;
         }else if(id == R.id.nav_my_account){
-            return true;
+               return true;
         }else if(id == R.id.nav_sign_out){
-
+              return true;
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    private void setFragment(Fragment fragment) {
+    private void myCart() {
+        //action bar icons are removed by using this function and again on create option menu will run.
+        Log.i("perul","My cart");
+        invalidateOptionsMenu();
+        setFragment(new MyCartFragment(),CART_FRAGMENT);
+        navigationView.getMenu().getItem(3).setChecked(true);
+    }
+
+
+    private void setFragment(Fragment fragment, int fragmentNum) {
+        currentFragment = fragmentNum;
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(frameLayout.getId(),fragment);
         fragmentTransaction.commit();
