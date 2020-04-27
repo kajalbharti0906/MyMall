@@ -1,4 +1,4 @@
-package learncodeonline.in.mymall;
+package learncodeonline.in.mymall.home;
 
 import android.util.Log;
 

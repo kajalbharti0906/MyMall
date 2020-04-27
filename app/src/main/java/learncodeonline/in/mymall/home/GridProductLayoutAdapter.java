@@ -1,4 +1,4 @@
-package learncodeonline.in.mymall;
+package learncodeonline.in.mymall.home;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
+
+import learncodeonline.in.mymall.R;
+import learncodeonline.in.mymall.product.ProductDetailActivity;
 
 public class GridProductLayoutAdapter extends BaseAdapter {
 

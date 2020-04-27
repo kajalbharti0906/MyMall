@@ -2,7 +2,6 @@ package learncodeonline.in.mymall;
 
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -23,15 +22,19 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import learncodeonline.in.mymall.cart.MyCartFragment;
+import learncodeonline.in.mymall.home.HomeFragment;
+
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
 
     private static final int HOME_FRAGMENT=0;
     private static final int CART_FRAGMENT=1;
+    private static final int ORDERS_FRAGMENT=2;
 
     private FrameLayout frameLayout;
     private ImageView actionBarLogo;
-    private static int currentFragment=1;
+    private static int currentFragment=-1;
     private NavigationView navigationView;
 
    // private AppBarConfiguration mAppBarConfiguration;
@@ -44,9 +47,7 @@ public class MainActivity extends AppCompatActivity implements
         actionBarLogo = findViewById(R.id.action_bar_logo);
         setSupportActionBar(toolbar);
 
-        Log.i("error","oncreate");
-        frameLayout = findViewById(R.id.main_frameLayout);
-        setFragment(new HomeFragment(),HOME_FRAGMENT);
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,0,0);
         drawer.addDrawerListener(toggle);
@@ -56,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
+        frameLayout = findViewById(R.id.main_frameLayout);
+        setFragment(new HomeFragment(),HOME_FRAGMENT);
 
     }
 
@@ -74,19 +77,22 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         if(currentFragment==HOME_FRAGMENT) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             getMenuInflater().inflate(R.menu.main, menu);
         }
         return true;
     }
 
-    private void myCart() {
+    private void gotoFragment(String title,Fragment fragment, int fragmentNum) {
         //action bar icons are removed by using this function and again on create option menu will run.
         actionBarLogo.setVisibility(View.GONE);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle("My Cart");
+        getSupportActionBar().setTitle(title);
         invalidateOptionsMenu();
-        setFragment(new MyCartFragment(),CART_FRAGMENT);
-        navigationView.getMenu().getItem(3).setChecked(true);
+        setFragment(fragment, fragmentNum);
+        if (fragmentNum == CART_FRAGMENT) {
+            navigationView.getMenu().getItem(3).setChecked(true);
+        }
     }
 
     @Override
@@ -98,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements
         }else if(id == R.id.main_notification_icon){
              return true;
         }else if(id == R.id.main_cart_icon){
-            myCart();
+            gotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
             return true;
         }
 
@@ -110,16 +116,17 @@ public class MainActivity extends AppCompatActivity implements
 
         int id = menuItem.getItemId();
         if(id == R.id.nav_my_mall){
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
+
             actionBarLogo.setVisibility(View.VISIBLE);
             invalidateOptionsMenu();
             setFragment(new HomeFragment(),HOME_FRAGMENT);
         }else if(id == R.id.nav_my_orders){
+            gotoFragment("My Orders",new MyOrdersFragment(),ORDERS_FRAGMENT);
            return true;
         }else if(id == R.id.nav_my_rewards){
               return true;
         }else if(id == R.id.nav_my_cart){
-            myCart();
+            gotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
             return true;
         }else if(id == R.id.nav_my_wishlist){
              return true;

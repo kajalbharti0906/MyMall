@@ -1,4 +1,4 @@
-package learncodeonline.in.mymall;
+package learncodeonline.in.mymall.home;
 
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -12,6 +12,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.PagerAdapter;
 
 import java.util.List;
+
+import learncodeonline.in.mymall.R;
 
 public class SliderAdapter extends PagerAdapter {
 

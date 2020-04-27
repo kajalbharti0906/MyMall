@@ -1,4 +1,4 @@
-package learncodeonline.in.mymall;
+package learncodeonline.in.mymall.home;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +12,8 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import learncodeonline.in.mymall.R;
 
 public class CategoryActivity extends AppCompatActivity {
 

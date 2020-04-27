@@ -1,4 +1,4 @@
-package learncodeonline.in.mymall;
+package learncodeonline.in.mymall.cart;
 
 
 import android.os.Bundle;
@@ -13,6 +13,10 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import learncodeonline.in.mymall.R;
+import learncodeonline.in.mymall.cart.CartAdapter;
+import learncodeonline.in.mymall.cart.CartItemModel;
 
 
 /**

@@ -11,8 +11,8 @@
         android:roundIcon="@mipmap/mall_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ProductDetailActivity"></activity>
-        <activity android:name=".CategoryActivity" />
+        <activity android:name=".product.ProductDetailActivity"></activity>
+        <activity android:name=".home.CategoryActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"

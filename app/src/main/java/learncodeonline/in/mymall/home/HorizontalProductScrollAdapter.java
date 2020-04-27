@@ -1,4 +1,4 @@
-package learncodeonline.in.mymall;
+package learncodeonline.in.mymall.home;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -11,6 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
+import learncodeonline.in.mymall.R;
+import learncodeonline.in.mymall.product.ProductDetailActivity;
 
 public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<HorizontalProductScrollAdapter.ViewHolder> {
 

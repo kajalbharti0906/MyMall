@@ -1,4 +1,4 @@
-package learncodeonline.in.mymall;
+package learncodeonline.in.mymall.cart;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
+import learncodeonline.in.mymall.R;
 
 public class CartAdapter extends RecyclerView.Adapter {
 

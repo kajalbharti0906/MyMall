@@ -1,4 +1,4 @@
-package learncodeonline.in.mymall;
+package learncodeonline.in.mymall.home;
 
 import android.graphics.Color;
 import android.os.Handler;
@@ -20,6 +20,8 @@ import androidx.viewpager.widget.ViewPager;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import learncodeonline.in.mymall.R;
 
 public class HomePageAdapter extends RecyclerView.Adapter {
 
