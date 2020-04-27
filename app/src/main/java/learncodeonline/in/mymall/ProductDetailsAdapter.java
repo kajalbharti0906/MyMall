@@ -1,4 +1,4 @@
-package learncodeonline.in.mymall.product;
+package learncodeonline.in.mymall;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;

@@ -1,4 +1,4 @@
-package learncodeonline.in.mymall.product;
+package learncodeonline.in.mymall;
 
 import android.view.View;
 import android.view.ViewGroup;

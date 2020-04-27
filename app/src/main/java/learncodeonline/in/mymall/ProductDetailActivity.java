@@ -1,4 +1,4 @@
-package learncodeonline.in.mymall.product;
+package learncodeonline.in.mymall;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,8 +19,6 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import learncodeonline.in.mymall.R;
 
 public class ProductDetailActivity extends AppCompatActivity {
 

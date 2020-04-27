@@ -1,4 +1,4 @@
-package learncodeonline.in.mymall.product;
+package learncodeonline.in.mymall;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -14,8 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
-
-import learncodeonline.in.mymall.R;
 
 public class ProductSpecificationAdapter extends RecyclerView.Adapter<ProductSpecificationAdapter.ViewHolder> {
 

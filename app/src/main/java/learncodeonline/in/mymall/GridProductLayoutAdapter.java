@@ -11,8 +11,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import learncodeonline.in.mymall.product.ProductDetailActivity;
-
 public class GridProductLayoutAdapter extends BaseAdapter {
 
     List<HorizontalProductScrollModel> horizontalProductScrollModelList;

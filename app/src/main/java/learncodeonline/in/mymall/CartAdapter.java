@@ -65,10 +65,10 @@ public class CartAdapter extends RecyclerView.Adapter {
             case CartItemModel.TOTAL_AMOUNT:
                 String totalItem = cartItemModelList.get(position).getTotalItem();
                 String totalItemPrice = cartItemModelList.get(position).getTotalItemPrice();
+                String totalPrice = cartItemModelList.get(position).getTotalPrice();
                 String deliveryPrice = cartItemModelList.get(position).getDeliveryPrice();
-                String totalAmount = cartItemModelList.get(position).getTotalAmount();
                 String savedAmount = cartItemModelList.get(position).getSavedAmount();
-                ((cartTotalAmountViewholder)holder).setTotalAmount(totalItem,totalItemPrice,deliveryPrice,totalAmount,savedAmount);
+                ((cartTotalAmountViewholder)holder).setTotalAmount(totalItem,totalItemPrice,totalPrice,deliveryPrice,savedAmount);
                 break;
             default:
                 return;
@@ -134,24 +134,24 @@ public class CartAdapter extends RecyclerView.Adapter {
 
         private TextView totalItem;
         private TextView totalItemPrice;
+        private TextView totalPrice;
         private TextView deliveryPrice;
-        private TextView totalAmount;
         private TextView savedAmount;
 
         public cartTotalAmountViewholder(@NonNull View itemView) {
             super(itemView);
             totalItem = itemView.findViewById(R.id.total_item);
             totalItemPrice = itemView.findViewById(R.id.total_item_price);
+            totalPrice = itemView.findViewById(R.id.total_price);
             deliveryPrice = itemView.findViewById(R.id.delivery_price);
-            totalAmount = itemView.findViewById(R.id.total_amount);
             savedAmount = itemView.findViewById(R.id.saved_amount);
         }
 
-        private void setTotalAmount(String totalItemText, String totalItemPriceText, String deliveryPriceText, String totalAmountText, String savedAmountText) {
+        private void setTotalAmount(String totalItemText, String totalItemPriceText, String totalPriceText, String deliveryPriceText, String savedAmountText) {
             totalItem.setText(totalItemText);
             totalItemPrice.setText(totalItemPriceText);
+            totalPrice.setText(totalPriceText);
             deliveryPrice.setText(deliveryPriceText);
-            totalAmount.setText(totalAmountText);
             savedAmount.setText(savedAmountText);
         }
     }
