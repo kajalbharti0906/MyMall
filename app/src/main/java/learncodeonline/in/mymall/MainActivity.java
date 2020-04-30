@@ -24,6 +24,7 @@ import android.widget.ImageView;
 
 import learncodeonline.in.mymall.cart.MyCartFragment;
 import learncodeonline.in.mymall.home.HomeFragment;
+import learncodeonline.in.mymall.order.MyOrdersFragment;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {

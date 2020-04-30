@@ -1,5 +1,6 @@
-package learncodeonline.in.mymall;
+package learncodeonline.in.mymall.order;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -13,6 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
+
+import learncodeonline.in.mymall.OrderDetailActivity;
+import learncodeonline.in.mymall.R;
 
 public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Viewholder> {
 
@@ -54,13 +58,21 @@ public class MyOrderAdapter extends RecyclerView.Adapter<MyOrderAdapter.Viewhold
         private LinearLayout rateNowContainer;
         ////////rating layout
 
-        public Viewholder(@NonNull View itemView) {
+        public Viewholder(@NonNull final View itemView) {
             super(itemView);
             productImage = itemView.findViewById(R.id.product_image);
             deliveryIndicator = itemView.findViewById(R.id.order_indicator);
             productTitle = itemView.findViewById(R.id.product_title);
             deliveryStatus = itemView.findViewById(R.id.order_deliverd_date);
             rateNowContainer = itemView.findViewById(R.id.rate_now_container);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent orderDetailsIntent = new Intent(itemView.getContext(), OrderDetailActivity.class);
+                    itemView.getContext().startActivity(orderDetailsIntent);
+                }
+            });
         }
         private void setdata(int resource,String title,String deliveredDate,int rating) {
             productImage.setImageResource(resource);

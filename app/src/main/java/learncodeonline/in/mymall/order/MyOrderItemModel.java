@@ -1,4 +1,4 @@
-package learncodeonline.in.mymall;
+package learncodeonline.in.mymall.order;
 
 public class MyOrderItemModel {
 
