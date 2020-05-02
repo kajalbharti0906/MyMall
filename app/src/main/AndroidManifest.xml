@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/mall_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".OrderDetailActivity"></activity>
+        <activity android:name=".order.OrderDetailActivity"></activity>
         <activity android:name=".product.ProductDetailActivity" />
         <activity android:name=".home.CategoryActivity" />
         <activity

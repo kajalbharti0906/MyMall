@@ -120,7 +120,7 @@
         app:layout_constraintStart_toEndOf="@+id/product_price" />
 
     <View
-        android:id="@+id/divider5"
+        android:id="@+id/cutted_divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
         android:background="#80000000"

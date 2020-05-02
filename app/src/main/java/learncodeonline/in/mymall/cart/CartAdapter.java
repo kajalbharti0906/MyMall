@@ -112,7 +112,7 @@ public class CartAdapter extends RecyclerView.Adapter {
             productTitle.setText(title);
             if (freeCouponNum > 0) {
                 freeCoupons.setVisibility(View.VISIBLE);
-                freeCoupons.setVisibility(View.VISIBLE);
+                freeCouponIcon.setVisibility(View.VISIBLE);
                 if (freeCouponNum == 1)
                     freeCoupons.setText("free " + freeCouponNum + " Coupon");
                 else
