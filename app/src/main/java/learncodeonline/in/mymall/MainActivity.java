@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final int ORDERS_FRAGMENT=2;
     private static final int WISHLIST_FRAGMENT=3;
     private static final int REWARD_FRAGMENT=4;
+    private static final int ACCOUNT_FRAGMENT=5;
 
     private FrameLayout frameLayout;
     private ImageView actionBarLogo;
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements
             gotoFragment("My Wishlist",new MyWishlistFragment(),WISHLIST_FRAGMENT);
 
         }else if(id == R.id.nav_my_account){
-
+             gotoFragment("My Account",new MyAccountFragment(),ACCOUNT_FRAGMENT);
         }else if(id == R.id.nav_sign_out){
 
         }
