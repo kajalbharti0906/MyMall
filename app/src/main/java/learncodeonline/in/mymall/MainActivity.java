@@ -25,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import learncodeonline.in.mymall.address.MyAccountFragment;
 import learncodeonline.in.mymall.cart.MyCartFragment;
 import learncodeonline.in.mymall.home.HomeFragment;
 import learncodeonline.in.mymall.order.MyOrdersFragment;
