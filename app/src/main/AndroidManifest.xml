@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/mall_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".address.MyAddressActivity"></activity>
+        <activity android:name=".ViewAllActivity"></activity>
+        <activity android:name=".address.MyAddressActivity" />
         <activity
             android:name=".address.AddAddressActivity"
             android:theme="@style/RedProgressbar" />

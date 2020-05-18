@@ -37,7 +37,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        Log.i("perul","inside home fragmnebtr");
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         categoryRecyclerView = view.findViewById(R.id.category_recycler_view);
@@ -64,21 +63,17 @@ public class HomeFragment extends Fragment {
         /////////// Banner Slider
         List<SliderModel>sliderModelList = new ArrayList<SliderModel>();
 
-        sliderModelList.add(new SliderModel(R.drawable.banner7,"#FFFFFF"));
-        sliderModelList.add(new SliderModel(R.drawable.banner8,"#FFFFFF"));
         sliderModelList.add(new SliderModel(R.drawable.banner1,"#FFFFFF"));
-
         sliderModelList.add(new SliderModel(R.drawable.banner3,"#FFFFFF"));
         sliderModelList.add(new SliderModel(R.drawable.banner5,"#FFFFFF"));
         sliderModelList.add(new SliderModel(R.drawable.banner7,"#FFFFFF"));
-
         sliderModelList.add(new SliderModel(R.drawable.banner8,"#FFFFFF"));
-        sliderModelList.add(new SliderModel(R.drawable.banner1,"#FFFFFF"));
-        sliderModelList.add(new SliderModel(R.drawable.banner3,"#FFFFFF"));
         /////////// Banner Slider
 
         /////////// Horizontal Product
         List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
+        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
@@ -103,6 +98,15 @@ public class HomeFragment extends Fragment {
         homePageModelList.add(new HomePageModel(3,"Deals of the Day!",horizontalProductScrollModelList));
         homePageModelList.add(new HomePageModel(1,R.drawable.banner,"#FFFFFF"));
         homePageModelList.add(new HomePageModel(3,"Deals of the Day!",horizontalProductScrollModelList));
+        homePageModelList.add(new HomePageModel(1,R.drawable.banner,"#FFFFFF"));
+        homePageModelList.add(new HomePageModel(0,sliderModelList));
+        homePageModelList.add(new HomePageModel(2,"Deals of the Day!",horizontalProductScrollModelList));
+        homePageModelList.add(new HomePageModel(2,"Deals of the Day!",horizontalProductScrollModelList));
+        homePageModelList.add(new HomePageModel(3,"Deals of the Day!",horizontalProductScrollModelList));
+        homePageModelList.add(new HomePageModel(1,R.drawable.banner,"#FFFFFF"));
+        homePageModelList.add(new HomePageModel(3,"Deals of the Day!",horizontalProductScrollModelList));
+
+
         HomePageAdapter adapter = new HomePageAdapter(homePageModelList);
         testing.setAdapter(adapter);
         adapter.notifyDataSetChanged();

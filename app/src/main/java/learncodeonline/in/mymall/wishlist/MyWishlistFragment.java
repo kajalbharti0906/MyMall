@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import learncodeonline.in.mymall.R;
-import learncodeonline.in.mymall.wishlist.WishlistAdapter;
-import learncodeonline.in.mymall.wishlist.WishlistModel;
 
 
 /**
@@ -48,7 +46,7 @@ public class MyWishlistFragment extends Fragment {
         wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone,"Pixel 2",1,"2",145,"Rs.49999/-","Rs.59999/-","Cash on Delivery"));
         wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone,"Pixel 2",1,"3.5",145,"Rs.49999/-","Rs.59999/-","Cash on Delivery"));
 
-        WishlistAdapter wishlistAdapter = new WishlistAdapter(wishlistModelList);
+        WishlistAdapter wishlistAdapter = new WishlistAdapter(wishlistModelList, true);
         wishlistRecyclerView.setAdapter(wishlistAdapter);
         wishlistAdapter.notifyDataSetChanged();
         return view;

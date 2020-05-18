@@ -1,8 +1,11 @@
 package learncodeonline.in.mymall;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -20,17 +23,21 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import learncodeonline.in.mymall.address.MyAccountFragment;
+import learncodeonline.in.mymall.authentication.RegisterActivity;
 import learncodeonline.in.mymall.cart.MyCartFragment;
 import learncodeonline.in.mymall.home.HomeFragment;
 import learncodeonline.in.mymall.order.MyOrdersFragment;
 import learncodeonline.in.mymall.reward.MyRewardsFragment;
 import learncodeonline.in.mymall.wishlist.MyWishlistFragment;
+import static learncodeonline.in.mymall.authentication.RegisterActivity.setSignUpFragment;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
@@ -41,10 +48,11 @@ public class MainActivity extends AppCompatActivity implements
     private static final int WISHLIST_FRAGMENT=3;
     private static final int REWARD_FRAGMENT=4;
     private static final int ACCOUNT_FRAGMENT=5;
+    public static Boolean showCart = false;
 
     private FrameLayout frameLayout;
     private ImageView actionBarLogo;
-    private static int currentFragment=-1;
+    private int currentFragment=-1;
     private NavigationView navigationView;
 
     private Window window;
@@ -64,17 +72,22 @@ public class MainActivity extends AppCompatActivity implements
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,0,0);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
 
         frameLayout = findViewById(R.id.main_frameLayout);
-        setFragment(new HomeFragment(),HOME_FRAGMENT);
-
+        if(showCart){
+            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            gotoFragment("My Cart",new MyCartFragment(),-2);
+        }else {
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+            drawer.addDrawerListener(toggle);
+            toggle.syncState();
+            setFragment(new HomeFragment(), HOME_FRAGMENT);
+        }
     }
 
     @Override
@@ -85,13 +98,19 @@ public class MainActivity extends AppCompatActivity implements
             drawer.closeDrawer(GravityCompat.START);
         }else {
             if(currentFragment==HOME_FRAGMENT) {
+                currentFragment=-1;
                 super.onBackPressed();
             }
             else{
-                actionBarLogo.setVisibility(View.VISIBLE);
-                invalidateOptionsMenu();
-                setFragment(new HomeFragment(),HOME_FRAGMENT);
-                navigationView.getMenu().getItem(0).setChecked(true);
+                if(showCart){
+                     showCart=false;
+                     finish();
+                }else {
+                    actionBarLogo.setVisibility(View.VISIBLE);
+                    invalidateOptionsMenu();
+                    setFragment(new HomeFragment(), HOME_FRAGMENT);
+                    navigationView.getMenu().getItem(0).setChecked(true);
+                }
             }
         }
     }
@@ -127,8 +146,40 @@ public class MainActivity extends AppCompatActivity implements
         }else if(id == R.id.main_notification_icon){
              return true;
         }else if(id == R.id.main_cart_icon){
-            gotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
+            final Dialog signInDialog = new Dialog(MainActivity.this);
+            signInDialog.setContentView(R.layout.sign_in_dialog);
+            signInDialog.setCancelable(true);
+            signInDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+            Button dialogSignInBtn = signInDialog.findViewById(R.id.sign_in_btn_dialog);
+            Button dialogSignUpBtn = signInDialog.findViewById(R.id.sign_up_btn_dialog);
+            final Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
+            signInDialog.show();
+            dialogSignInBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    signInDialog.dismiss();
+                    setSignUpFragment = false;
+                    startActivity(registerIntent);
+                }
+            });
+
+            dialogSignUpBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    signInDialog.dismiss();
+                    setSignUpFragment = true;
+                    startActivity(registerIntent);
+                }
+            });
+
+           // gotoFragment("My Cart",new MyCartFragment(),CART_FRAGMENT);
             return true;
+        }else if(id == android.R.id.home){
+            if(showCart){
+                showCart=false;
+                finish();
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
