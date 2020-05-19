@@ -32,33 +32,7 @@ public class CategoryActivity extends AppCompatActivity {
 
         categoryRecyclerView = findViewById(R.id.category_recycler_view);
 
-        /////////// Banner Slider
-        List<SliderModel>sliderModelList = new ArrayList<SliderModel>();
 
-        sliderModelList.add(new SliderModel(R.drawable.banner7,"#FFFFFF"));
-        sliderModelList.add(new SliderModel(R.drawable.banner8,"#FFFFFF"));
-        sliderModelList.add(new SliderModel(R.drawable.banner1,"#FFFFFF"));
-
-        sliderModelList.add(new SliderModel(R.drawable.banner3,"#FFFFFF"));
-        sliderModelList.add(new SliderModel(R.drawable.banner5,"#FFFFFF"));
-        sliderModelList.add(new SliderModel(R.drawable.banner7,"#FFFFFF"));
-
-        sliderModelList.add(new SliderModel(R.drawable.banner8,"#FFFFFF"));
-        sliderModelList.add(new SliderModel(R.drawable.banner1,"#FFFFFF"));
-        sliderModelList.add(new SliderModel(R.drawable.banner3,"#FFFFFF"));
-        /////////// Banner Slider
-
-        /////////// Horizontal Product
-        List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-        /////////// Horizontal Product
 
         /////////////////////////////////
         LinearLayoutManager testingLayoutManager = new LinearLayoutManager(this);
@@ -66,14 +40,6 @@ public class CategoryActivity extends AppCompatActivity {
         categoryRecyclerView.setLayoutManager(testingLayoutManager);
 
         List<HomePageModel> homePageModelList = new ArrayList<>();
-        homePageModelList.add(new HomePageModel(1,R.drawable.banner,"#FFFFFF"));
-        homePageModelList.add(new HomePageModel(0,sliderModelList));
-        homePageModelList.add(new HomePageModel(2,"Deals of the Day!",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(2,"Deals of the Day!",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(3,"Deals of the Day!",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(1,R.drawable.banner,"#FFFFFF"));
-        homePageModelList.add(new HomePageModel(3,"Deals of the Day!",horizontalProductScrollModelList));
-        homePageModelList.add(new HomePageModel(0,sliderModelList));
         HomePageAdapter adapter = new HomePageAdapter(homePageModelList);
         categoryRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();

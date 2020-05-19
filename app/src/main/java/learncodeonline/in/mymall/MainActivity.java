@@ -190,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements
 
         int id = menuItem.getItemId();
         if(id == R.id.nav_my_mall){
-
             actionBarLogo.setVisibility(View.VISIBLE);
             invalidateOptionsMenu();
             setFragment(new HomeFragment(),HOME_FRAGMENT);
