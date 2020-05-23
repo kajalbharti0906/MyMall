@@ -1,8 +1,11 @@
 package learncodeonline.in.mymall;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -14,6 +17,7 @@ import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -51,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements
     public static Boolean showCart = false;
 
     private FrameLayout frameLayout;
+    private ImageView noInternetConnection;
     private ImageView actionBarLogo;
     private int currentFragment=-1;
     private NavigationView navigationView;
@@ -78,15 +83,26 @@ public class MainActivity extends AppCompatActivity implements
         navigationView.getMenu().getItem(0).setChecked(true);
 
         frameLayout = findViewById(R.id.main_frameLayout);
-        if(showCart){
-            drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            gotoFragment("My Cart",new MyCartFragment(),-2);
-        }else {
-            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
-            drawer.addDrawerListener(toggle);
-            toggle.syncState();
-            setFragment(new HomeFragment(), HOME_FRAGMENT);
+        noInternetConnection = findViewById(R.id.no_internet_connection);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if(networkInfo!=null && networkInfo.isConnected()==true) {
+            noInternetConnection.setVisibility(View.GONE);
+            if (showCart) {
+                drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                gotoFragment("My Cart", new MyCartFragment(), -2);
+            } else {
+                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                drawer.addDrawerListener(toggle);
+                toggle.syncState();
+                setFragment(new HomeFragment(), HOME_FRAGMENT);
+            }
+        }
+        else{
+            Glide.with(this).load(R.drawable.forgot_password_image).into(noInternetConnection);
+            noInternetConnection.setVisibility(View.VISIBLE);
         }
     }
 

@@ -1,6 +1,7 @@
 package learncodeonline.in.mymall.home;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -27,7 +28,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import learncodeonline.in.mymall.R;
-import learncodeonline.in.mymall.ViewAllActivity;
 import learncodeonline.in.mymall.product.ProductDetailActivity;
 
 public class HomePageAdapter extends RecyclerView.Adapter {
@@ -94,14 +94,16 @@ public class HomePageAdapter extends RecyclerView.Adapter {
                 ((StripAdBannerViewHolder) holder).setStripAd(resource, color);
                 break;
             case HomePageModel.HORIZONTAL_PRODUCT_VIEW:
+                String layoutcolor = homePageModelList.get(position).getBackgroundColor();
                 String horizontalLayoutTitle = homePageModelList.get(position).getTitle();
                 List<HorizontalProductScrollModel> horizontalProductScrollModelList = homePageModelList.get(position).getHorizontalProductScrollModelList();
-                ((HorizontalProductViewHolder) holder).setHorizontalProductLayout(horizontalProductScrollModelList, horizontalLayoutTitle);
+                ((HorizontalProductViewHolder) holder).setHorizontalProductLayout(horizontalProductScrollModelList, horizontalLayoutTitle, layoutcolor);
                 break;
             case HomePageModel.GRID_PRODUCT_VIEW:
+                String gridlayoutcolor = homePageModelList.get(position).getBackgroundColor();
                 String gridLayoutTitle = homePageModelList.get(position).getTitle();
                 List<HorizontalProductScrollModel> gridProductScrollModelList = homePageModelList.get(position).getHorizontalProductScrollModelList();
-                ((GridProductViewHolder) holder).setGridProductLayout(gridProductScrollModelList, gridLayoutTitle);
+                ((GridProductViewHolder) holder).setGridProductLayout(gridProductScrollModelList, gridLayoutTitle, gridlayoutcolor);
                 break;
             default:
                 return;
@@ -230,27 +232,30 @@ public class HomePageAdapter extends RecyclerView.Adapter {
         }
 
         private void setStripAd(String resource, String color) {
-            Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.mipmap.home)).into(stripAdImage);
+            Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.drawable.banner)).into(stripAdImage);
             stripAdContainer.setBackgroundColor(Color.parseColor(color));
         }
     }
 
     public class HorizontalProductViewHolder extends RecyclerView.ViewHolder {
 
+        private ConstraintLayout horizontalLayoutContainer;
         private TextView horizontalLayoutTitle;
         private Button horizontalviewAllbtn;
         private RecyclerView horizontalRecyclerView;
 
         public HorizontalProductViewHolder(@NonNull View itemView) {
             super(itemView);
+            horizontalLayoutContainer = itemView.findViewById(R.id.horizontal_layout_container);
             horizontalLayoutTitle = itemView.findViewById(R.id.hs_layout_title);
             horizontalviewAllbtn = itemView.findViewById(R.id.hs_view_all);
             horizontalRecyclerView = itemView.findViewById(R.id.hs_layout_recycler_view);
             horizontalRecyclerView.setRecycledViewPool(recycledViewPool);
         }
 
-        private void setHorizontalProductLayout(List<HorizontalProductScrollModel> horizontalProductScrollModelList, String title) {
+        private void setHorizontalProductLayout(List<HorizontalProductScrollModel> horizontalProductScrollModelList, String title, String layoutcolor) {
 
+            horizontalLayoutContainer.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(layoutcolor)));
             horizontalLayoutTitle.setText(title);
 
             if (horizontalProductScrollModelList.size() > 8) {
@@ -279,6 +284,7 @@ public class HomePageAdapter extends RecyclerView.Adapter {
     }
 
     public class GridProductViewHolder extends RecyclerView.ViewHolder {
+        private ConstraintLayout gridLayoutContainer;
         private TextView gridLayoutTitle;
         private Button gridLayoutBtn;
         private GridLayout gridproductlayout;
@@ -288,9 +294,11 @@ public class HomePageAdapter extends RecyclerView.Adapter {
             gridLayoutTitle = itemView.findViewById(R.id.grid_product_title);
             gridLayoutBtn = itemView.findViewById(R.id.grid_product_btn);
             gridproductlayout = itemView.findViewById(R.id.grid_layout);
+            gridLayoutContainer = itemView.findViewById(R.id.grid_layout_container);
         }
 
-        private void setGridProductLayout(List<HorizontalProductScrollModel> horizontalProductScrollModelList, String title) {
+        private void setGridProductLayout(List<HorizontalProductScrollModel> horizontalProductScrollModelList, String title, String gridlayoutcolor) {
+            gridLayoutContainer.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(gridlayoutcolor)));
             gridLayoutTitle.setText(title);
 
              for(int x=0;x<4;x++){
@@ -299,7 +307,7 @@ public class HomePageAdapter extends RecyclerView.Adapter {
                  TextView productPrice = gridproductlayout.getChildAt(x).findViewById(R.id.hs_product_price);
                  TextView productDescription = gridproductlayout.getChildAt(x).findViewById(R.id.hs_product_description);
 
-                 productImage.setImageResource(horizontalProductScrollModelList.get(x).getProductImage());
+                 Glide.with(itemView.getContext()).load(horizontalProductScrollModelList.get(x).getProductImage()).apply(new RequestOptions().placeholder(R.mipmap.home)).into(productImage);
                  productTitle.setText(horizontalProductScrollModelList.get(x).getProductName());
                  productPrice.setText(horizontalProductScrollModelList.get(x).getProductPrice());
                  productDescription.setText(horizontalProductScrollModelList.get(x).getProductDescription());
