@@ -1,6 +1,9 @@
 package learncodeonline.in.mymall.home;
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,8 +15,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -48,7 +53,7 @@ public class HomeFragment extends Fragment {
     private CategoryAdapter categoryAdapter;
     private RecyclerView homepageRecyclerView;
     private HomePageAdapter adapter;
-
+     private ImageView noInternetConnection;
 
 
     @Override
@@ -56,55 +61,51 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        categoryRecyclerView = view.findViewById(R.id.category_recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        categoryRecyclerView.setLayoutManager(layoutManager);
+        noInternetConnection = view.findViewById(R.id.no_internet_connection);
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if(networkInfo!=null && networkInfo.isConnected()==true) {
+            noInternetConnection.setVisibility(View.GONE);
+
+            categoryRecyclerView = view.findViewById(R.id.category_recycler_view);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+            layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            categoryRecyclerView.setLayoutManager(layoutManager);
 
 
 
-        categoryAdapter = new CategoryAdapter(categoryModelList);
-        categoryRecyclerView.setAdapter(categoryAdapter);
+            categoryAdapter = new CategoryAdapter(categoryModelList);
+            categoryRecyclerView.setAdapter(categoryAdapter);
 
-        if(categoryModelList.size()==0){
-           loadCategories(categoryAdapter,getContext());
+            if(categoryModelList.size()==0){
+                loadCategories(categoryAdapter,getContext());
+            }
+            else{
+                categoryAdapter.notifyDataSetChanged();
+            }
+
+            homepageRecyclerView = view.findViewById(R.id.home_page_recycler_view);
+            LinearLayoutManager testingLayoutManager = new LinearLayoutManager(getContext());
+            testingLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            homepageRecyclerView.setLayoutManager(testingLayoutManager);
+
+            adapter = new HomePageAdapter(homePageModelList);
+            homepageRecyclerView.setAdapter(adapter);
+
+
+            if(homePageModelList.size()==0){
+                loadFragmentData(adapter,getContext());
+            }
+            else{
+                categoryAdapter.notifyDataSetChanged();
+            }
+
         }
         else{
-            categoryAdapter.notifyDataSetChanged();
+            Glide.with(this).load(R.drawable.forgot_password_image).into(noInternetConnection);
+            noInternetConnection.setVisibility(View.VISIBLE);
         }
-
-
-        /////////// Horizontal Product
-//        List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
-//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-//        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(R.drawable.mobile_phone,"Redmi 5A","SD 625 Processor","Rs. 5999/-"));
-        /////////// Horizontal Product
-
-        /////////////////////////////////
-        homepageRecyclerView = view.findViewById(R.id.home_page_recycler_view);
-        LinearLayoutManager testingLayoutManager = new LinearLayoutManager(getContext());
-        testingLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        homepageRecyclerView.setLayoutManager(testingLayoutManager);
-
-        adapter = new HomePageAdapter(homePageModelList);
-        homepageRecyclerView.setAdapter(adapter);
-
-
-        if(homePageModelList.size()==0){
-            loadFragmentData(adapter,getContext());
-        }
-        else{
-            categoryAdapter.notifyDataSetChanged();
-        }
-
 
         /////////////////////////////////
         return view;

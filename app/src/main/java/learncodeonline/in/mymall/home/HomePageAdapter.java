@@ -297,7 +297,7 @@ public class HomePageAdapter extends RecyclerView.Adapter {
             gridLayoutContainer = itemView.findViewById(R.id.grid_layout_container);
         }
 
-        private void setGridProductLayout(List<HorizontalProductScrollModel> horizontalProductScrollModelList, String title, String gridlayoutcolor) {
+        private void setGridProductLayout(final List<HorizontalProductScrollModel> horizontalProductScrollModelList, final String title, String gridlayoutcolor) {
             gridLayoutContainer.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(gridlayoutcolor)));
             gridLayoutTitle.setText(title);
 
@@ -326,8 +326,10 @@ public class HomePageAdapter extends RecyclerView.Adapter {
             gridLayoutBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    ViewAllActivity.horizontalProductScrollModelList = horizontalProductScrollModelList;
                     Intent viewAllIntent = new Intent(itemView.getContext(), ViewAllActivity.class);
                     viewAllIntent.putExtra("layout_code",1);
+                    viewAllIntent.putExtra("title",title);
                     itemView.getContext().startActivity(viewAllIntent);
                 }
             });
