@@ -15,9 +15,14 @@ import java.util.List;
 
 import learncodeonline.in.mymall.R;
 
+import static learncodeonline.in.mymall.DBqueries.lists;
+import static learncodeonline.in.mymall.DBqueries.loadFragmentData;
+import static learncodeonline.in.mymall.DBqueries.loadedCategoriesNames;
+
 public class CategoryActivity extends AppCompatActivity {
 
     private RecyclerView categoryRecyclerView;
+    private HomePageAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +44,22 @@ public class CategoryActivity extends AppCompatActivity {
         testingLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         categoryRecyclerView.setLayoutManager(testingLayoutManager);
 
-        List<HomePageModel> homePageModelList = new ArrayList<>();
-        HomePageAdapter adapter = new HomePageAdapter(homePageModelList);
+        int listPosition=0;
+        for(int x=0;x<loadedCategoriesNames.size();x++){
+            if(loadedCategoriesNames.get(x).equals(title.toUpperCase())){
+                listPosition=x;
+            }
+        }
+        if(listPosition==0){
+            loadedCategoriesNames.add(title.toUpperCase());
+            lists.add(new ArrayList<HomePageModel>());
+            adapter = new HomePageAdapter(lists.get(loadedCategoriesNames.size()-1));
+            loadFragmentData(adapter,this,loadedCategoriesNames.size()-1,title);
+        }
+        else{
+            adapter = new HomePageAdapter(lists.get(listPosition));
+        }
+
         categoryRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }

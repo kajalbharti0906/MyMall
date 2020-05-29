@@ -1,6 +1,7 @@
 package learncodeonline.in.mymall;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,12 +21,15 @@ import learncodeonline.in.mymall.home.HomePageAdapter;
 import learncodeonline.in.mymall.home.HomePageModel;
 import learncodeonline.in.mymall.home.HorizontalProductScrollModel;
 import learncodeonline.in.mymall.home.SliderModel;
+import learncodeonline.in.mymall.wishlist.WishlistModel;
 
 public class DBqueries {
 
     public static FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    public static List<CategoryModel> categoryModelList = new ArrayList<CategoryModel>();;
-    public static List<HomePageModel> homePageModelList = new ArrayList<>();
+    public static List<CategoryModel> categoryModelList = new ArrayList<CategoryModel>();
+
+    public static List<List<HomePageModel>> lists = new ArrayList<>();
+    public static List<String> loadedCategoriesNames = new ArrayList<>();
 
     public static void loadCategories(final CategoryAdapter categoryAdapter, final Context context){
 
@@ -50,9 +54,10 @@ public class DBqueries {
 
     }
 
-    public static void loadFragmentData(final HomePageAdapter adapter, final Context context){
+    public static void loadFragmentData(final HomePageAdapter adapter, final Context context, final int index,String categoryNames){
+
         firebaseFirestore.collection("CATEGORIES")
-                .document("HOME")
+                .document(categoryNames.toUpperCase())
                 .collection("TOP_DEALS").orderBy("index").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -61,40 +66,55 @@ public class DBqueries {
 
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
 
-                                if((long) documentSnapshot.get("view_type") == 0){
+                                if(documentSnapshot.get("view_type").equals((long)0)){
+
                                     List<SliderModel> sliderModelList = new ArrayList<>();
-                                    long no_of_banners = (long)documentSnapshot.get("number_of_banner");
-                                    for(long x=1;x<no_of_banners+1;x++){
-                                        sliderModelList.add(new SliderModel(documentSnapshot.get("banner_"+x).toString()
-                                                ,documentSnapshot.get("banner_"+x+"_background").toString()));
+                                    long no_of_banners = (long)documentSnapshot.get("no_of_banner");
+                                    for(long x=1;x<no_of_banners+1;x++) {
+                                        sliderModelList.add(new SliderModel(documentSnapshot.get("banner_" + x).toString()
+                                                , documentSnapshot.get("banner_" + x + "_background").toString()));
                                     }
-                                    homePageModelList.add(new HomePageModel(0,sliderModelList));
+                                    lists.get(index).add(new HomePageModel(0,sliderModelList));
                                 }
-                                else if((long) documentSnapshot.get("view_type") == 1){
-                                    // to do correction of size.....
-                                    homePageModelList.add(new HomePageModel(1,documentSnapshot.get("strip_ad_banner").toString()
+                                else if(documentSnapshot.get("view_type").equals((long)1)){
+                                    lists.get(index).add(new HomePageModel(1,documentSnapshot.get("strip_ad_banner").toString()
                                             ,documentSnapshot.get("background").toString()));
                                 }
-                                else if((long) documentSnapshot.get("view_type") == 2){
+                                else if(documentSnapshot.get("view_type").equals((long)2)){
+                                    List<WishlistModel> viewAllProductList = new ArrayList<>();
                                     List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
                                     long no_of_products = (long)documentSnapshot.get("no_of_products");
                                     for(long x=1;x<no_of_products+1;x++){
-                                        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(documentSnapshot.get("product_ID_"+x).toString()
-                                                ,documentSnapshot.get("product_image_"+x).toString(),documentSnapshot.get("product_title_"+x).toString(),documentSnapshot.get("product_subtitle_"+x).toString(),documentSnapshot.get("product_price_"+x).toString()));
+                                        Log.e("perul","product_image_"+x);
+                                        horizontalProductScrollModelList.add(new HorizontalProductScrollModel(documentSnapshot.get("product_ID_"+x).toString(),
+                                                documentSnapshot.get("product_image_"+x).toString(),
+                                                documentSnapshot.get("product_title_"+x).toString(),
+                                                documentSnapshot.get("product_subtitle_"+x).toString(),
+                                                documentSnapshot.get("product_price_"+x).toString()));
+
+                                        viewAllProductList.add(new WishlistModel(documentSnapshot.get("product_image_"+x).toString(),
+                                                documentSnapshot.get("product_full_title_"+x).toString(),
+                                                (long)documentSnapshot.get("free_coupons_"+x),
+                                                documentSnapshot.get("average_rating_"+x).toString(),
+                                                (long)documentSnapshot.get("total_rating_"+x),
+                                                documentSnapshot.get("product_price_"+x).toString(),
+                                                documentSnapshot.get("cutted_price_"+x).toString(),
+                                                (boolean)documentSnapshot.get("COD_"+x)));
                                     }
-                                    homePageModelList.add(new HomePageModel(2,documentSnapshot.get("layout_title").toString(), documentSnapshot.get("layout_background").toString(), horizontalProductScrollModelList));
-                                }
-                                else if((long) documentSnapshot.get("view_type") == 3){
+                                    lists.get(index).add(new HomePageModel(2,documentSnapshot.get("layout_title").toString(), documentSnapshot.get("layout_background").toString(), horizontalProductScrollModelList,viewAllProductList));
+                            }
+                                else if(documentSnapshot.get("view_type").equals((long)3)){
                                     List<HorizontalProductScrollModel> GridLayoutModelList = new ArrayList<>();
                                     long no_of_products = (long)documentSnapshot.get("no_of_products");
                                     for(long x=1;x<no_of_products+1;x++){
                                         GridLayoutModelList.add(new HorizontalProductScrollModel(documentSnapshot.get("product_ID_"+x).toString()
                                                 ,documentSnapshot.get("product_image_"+x).toString(),documentSnapshot.get("product_title_"+x).toString(),documentSnapshot.get("product_subtitle_"+x).toString(),documentSnapshot.get("product_price_"+x).toString()));
                                     }
-                                    homePageModelList.add(new HomePageModel(3,documentSnapshot.get("layout_title").toString(), documentSnapshot.get("layout_background").toString(), GridLayoutModelList));
+                                    lists.get(index).add(new HomePageModel(3,documentSnapshot.get("layout_title").toString(), documentSnapshot.get("layout_background").toString(), GridLayoutModelList));
 
                                 }
                                 else{
+
                                     return;
                                 }
                             }

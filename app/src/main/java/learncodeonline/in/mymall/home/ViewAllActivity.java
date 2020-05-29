@@ -24,6 +24,7 @@ public class ViewAllActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private GridView gridView;
+    public static List<WishlistModel> wishlistModelList;
     public static List<HorizontalProductScrollModel> horizontalProductScrollModelList;
 
     @Override
@@ -48,27 +49,6 @@ public class ViewAllActivity extends AppCompatActivity {
             recyclerView.setLayoutManager(layoutManager);
 
 
-            List<WishlistModel> wishlistModelList = new ArrayList<>();
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "5", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "3", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "4.5", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "2", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "3.5", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "5", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "3", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "4.5", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "2", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "3.5", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "5", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "3", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "4.5", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "2", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "3.5", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "5", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "3", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "4.5", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "2", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
-            wishlistModelList.add(new WishlistModel(R.drawable.mobile_phone, "Pixel 2", 1, "3.5", 145, "Rs.49999/-", "Rs.59999/-", "Cash on Delivery"));
 
 
             WishlistAdapter adapter = new WishlistAdapter(wishlistModelList, false);

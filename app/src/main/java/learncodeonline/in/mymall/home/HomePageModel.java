@@ -2,6 +2,8 @@ package learncodeonline.in.mymall.home;
 
 import java.util.List;
 
+import learncodeonline.in.mymall.wishlist.WishlistModel;
+
 public class HomePageModel {
     public static final int BANNER_SLIDER = 0;
     public static final int STRIP_AD_BANNER = 1;
@@ -53,10 +55,32 @@ public class HomePageModel {
     }
     /////////// Strip Ad
 
-    /////////// Horizontal Product && Grid Product Layout
+
     private String title;
     private List<HorizontalProductScrollModel> horizontalProductScrollModelList;
 
+    /////////// Horizontal Product
+    private List<WishlistModel> viewAllProductList;
+
+    public HomePageModel(int type, String title, String backgroundColor, List<HorizontalProductScrollModel> horizontalProductScrollModelList, List<WishlistModel> viewAllProductList) {
+        this.type = type;
+        this.title = title;
+        this.backgroundColor = backgroundColor;
+        this.horizontalProductScrollModelList = horizontalProductScrollModelList;
+        this.viewAllProductList = viewAllProductList;
+    }
+
+    public List<WishlistModel> getViewAllProductList() {
+        return viewAllProductList;
+    }
+
+    public void setViewAllProductList(List<WishlistModel> viewAllProductList) {
+        this.viewAllProductList = viewAllProductList;
+    }
+
+    /////////// Horizontal Product
+
+    /////////// Grid Product Layout
     public HomePageModel(int type, String title, String backgroundColor, List<HorizontalProductScrollModel> horizontalProductScrollModelList) {
         this.type = type;
         this.title = title;
@@ -75,7 +99,7 @@ public class HomePageModel {
     public void setHorizontalProductScrollModelList(List<HorizontalProductScrollModel> horizontalProductScrollModelList) {
         this.horizontalProductScrollModelList = horizontalProductScrollModelList;
     }
-    /////////// Horizontal Product && Grid Product Layout
+    /////////// Grid Product Layout
 
 
 }

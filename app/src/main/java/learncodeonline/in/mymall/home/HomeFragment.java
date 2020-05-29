@@ -6,37 +6,26 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import learncodeonline.in.mymall.DBqueries;
 import learncodeonline.in.mymall.R;
 
 import static learncodeonline.in.mymall.DBqueries.categoryModelList;
-import static learncodeonline.in.mymall.DBqueries.firebaseFirestore;
-import static learncodeonline.in.mymall.DBqueries.homePageModelList;
+import static learncodeonline.in.mymall.DBqueries.lists;
 import static learncodeonline.in.mymall.DBqueries.loadCategories;
 import static learncodeonline.in.mymall.DBqueries.loadFragmentData;
-
+import static learncodeonline.in.mymall.DBqueries.loadedCategoriesNames;
 
 
 /**
@@ -90,17 +79,19 @@ public class HomeFragment extends Fragment {
             testingLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             homepageRecyclerView.setLayoutManager(testingLayoutManager);
 
-            adapter = new HomePageAdapter(homePageModelList);
-            homepageRecyclerView.setAdapter(adapter);
 
-
-            if(homePageModelList.size()==0){
-                loadFragmentData(adapter,getContext());
+            if(lists.size()==0){
+                loadedCategoriesNames.add("HOME");
+                lists.add(new ArrayList<HomePageModel>());
+                adapter = new HomePageAdapter(lists.get(0));
+                loadFragmentData(adapter,getContext(),0,"Home");
             }
             else{
-                categoryAdapter.notifyDataSetChanged();
+                adapter = new HomePageAdapter(lists.get(0));
+                adapter.notifyDataSetChanged();
             }
 
+            homepageRecyclerView.setAdapter(adapter);
         }
         else{
             Glide.with(this).load(R.drawable.forgot_password_image).into(noInternetConnection);

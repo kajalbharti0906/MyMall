@@ -29,6 +29,7 @@ import java.util.TimerTask;
 
 import learncodeonline.in.mymall.R;
 import learncodeonline.in.mymall.product.ProductDetailActivity;
+import learncodeonline.in.mymall.wishlist.WishlistModel;
 
 public class HomePageAdapter extends RecyclerView.Adapter {
 
@@ -96,8 +97,9 @@ public class HomePageAdapter extends RecyclerView.Adapter {
             case HomePageModel.HORIZONTAL_PRODUCT_VIEW:
                 String layoutcolor = homePageModelList.get(position).getBackgroundColor();
                 String horizontalLayoutTitle = homePageModelList.get(position).getTitle();
+                List<WishlistModel> viewAllProductList = homePageModelList.get(position).getViewAllProductList();
                 List<HorizontalProductScrollModel> horizontalProductScrollModelList = homePageModelList.get(position).getHorizontalProductScrollModelList();
-                ((HorizontalProductViewHolder) holder).setHorizontalProductLayout(horizontalProductScrollModelList, horizontalLayoutTitle, layoutcolor);
+                ((HorizontalProductViewHolder) holder).setHorizontalProductLayout(horizontalProductScrollModelList, horizontalLayoutTitle, layoutcolor,viewAllProductList);
                 break;
             case HomePageModel.GRID_PRODUCT_VIEW:
                 String gridlayoutcolor = homePageModelList.get(position).getBackgroundColor();
@@ -253,7 +255,7 @@ public class HomePageAdapter extends RecyclerView.Adapter {
             horizontalRecyclerView.setRecycledViewPool(recycledViewPool);
         }
 
-        private void setHorizontalProductLayout(List<HorizontalProductScrollModel> horizontalProductScrollModelList, String title, String layoutcolor) {
+        private void setHorizontalProductLayout(List<HorizontalProductScrollModel> horizontalProductScrollModelList, final String title, String layoutcolor, final List<WishlistModel> viewAllProductList) {
 
             horizontalLayoutContainer.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(layoutcolor)));
             horizontalLayoutTitle.setText(title);
@@ -263,8 +265,10 @@ public class HomePageAdapter extends RecyclerView.Adapter {
                 horizontalviewAllbtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        ViewAllActivity.wishlistModelList = viewAllProductList;
                         Intent viewAllIntent = new Intent(itemView.getContext(), ViewAllActivity.class);
                         viewAllIntent.putExtra("layout_code",0);
+                        viewAllIntent.putExtra("title",title);
                         itemView.getContext().startActivity(viewAllIntent);
                     }
                 });
