@@ -1,10 +1,10 @@
 package learncodeonline.in.mymall;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -17,6 +17,7 @@ import java.util.List;
 
 import learncodeonline.in.mymall.home.CategoryAdapter;
 import learncodeonline.in.mymall.home.CategoryModel;
+import learncodeonline.in.mymall.home.HomeFragment;
 import learncodeonline.in.mymall.home.HomePageAdapter;
 import learncodeonline.in.mymall.home.HomePageModel;
 import learncodeonline.in.mymall.home.HorizontalProductScrollModel;
@@ -31,7 +32,7 @@ public class DBqueries {
     public static List<List<HomePageModel>> lists = new ArrayList<>();
     public static List<String> loadedCategoriesNames = new ArrayList<>();
 
-    public static void loadCategories(final CategoryAdapter categoryAdapter, final Context context){
+    public static void loadCategories(final RecyclerView categoryRecyclerView, final CategoryAdapter categoryAdapter, final Context context){
 
         firebaseFirestore.collection("CATEGORIES").orderBy("index").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -44,6 +45,8 @@ public class DBqueries {
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                 categoryModelList.add(new CategoryModel(documentSnapshot.get("icon").toString(), documentSnapshot.get("categoryName").toString()));
                             }
+                            CategoryAdapter categoryAdapter = new CategoryAdapter(categoryModelList);
+                            categoryRecyclerView.setAdapter(categoryAdapter);
                             categoryAdapter.notifyDataSetChanged();
                         } else {
                             String error = task.getException().getMessage();
@@ -54,7 +57,7 @@ public class DBqueries {
 
     }
 
-    public static void loadFragmentData(final HomePageAdapter adapter, final Context context, final int index,String categoryNames){
+    public static void loadFragmentData(final RecyclerView homePageRecyclerView, final Context context, final int index, String categoryNames){
 
         firebaseFirestore.collection("CATEGORIES")
                 .document(categoryNames.toUpperCase())
@@ -85,7 +88,6 @@ public class DBqueries {
                                     List<HorizontalProductScrollModel> horizontalProductScrollModelList = new ArrayList<>();
                                     long no_of_products = (long)documentSnapshot.get("no_of_products");
                                     for(long x=1;x<no_of_products+1;x++){
-                                        Log.e("perul","product_image_"+x);
                                         horizontalProductScrollModelList.add(new HorizontalProductScrollModel(documentSnapshot.get("product_ID_"+x).toString(),
                                                 documentSnapshot.get("product_image_"+x).toString(),
                                                 documentSnapshot.get("product_title_"+x).toString(),
@@ -118,7 +120,10 @@ public class DBqueries {
                                     return;
                                 }
                             }
-                            adapter.notifyDataSetChanged();
+                            HomePageAdapter homePageAdapter = new HomePageAdapter(lists.get(index));
+                            homePageRecyclerView.setAdapter(homePageAdapter);
+                            homePageAdapter.notifyDataSetChanged();
+                            HomeFragment.swipeRefreshLayout.setRefreshing(false);
                         } else {
                             String error = task.getException().getMessage();
                             Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
