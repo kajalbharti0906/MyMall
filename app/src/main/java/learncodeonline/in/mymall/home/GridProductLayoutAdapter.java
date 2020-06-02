@@ -62,7 +62,7 @@ public class GridProductLayoutAdapter extends BaseAdapter {
             TextView productDescription = view.findViewById(R.id.hs_product_description);
             TextView productPrice = view.findViewById(R.id.hs_product_price);
 
-            Glide.with(parent.getContext()).load(horizontalProductScrollModelList.get(position).getProductImage()).apply(new RequestOptions().placeholder(R.mipmap.home)).into(productImage);
+            Glide.with(parent.getContext()).load(horizontalProductScrollModelList.get(position).getProductImage()).apply(new RequestOptions().placeholder(R.mipmap.smallplaceholder)).into(productImage);
             productName.setText(horizontalProductScrollModelList.get(position).getProductName());
             productDescription.setText(horizontalProductScrollModelList.get(position).getProductDescription());
             productPrice.setText(horizontalProductScrollModelList.get(position).getProductPrice());

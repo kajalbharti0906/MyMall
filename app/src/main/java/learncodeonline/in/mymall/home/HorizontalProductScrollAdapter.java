@@ -39,10 +39,7 @@ public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<Horizon
       String description = horizontalProductScrollModelList.get(position).getProductDescription();
       String price = horizontalProductScrollModelList.get(position).getProductPrice();
 
-      holder.setProductImage(resource);
-      holder.setProductName(name);
-      holder.setProductDescription(description);
-      holder.setProductPrice(price);
+      holder.setData(resource, name, description, price);
     }
 
     @Override
@@ -69,29 +66,23 @@ public class HorizontalProductScrollAdapter extends RecyclerView.Adapter<Horizon
             productDescription = itemView.findViewById(R.id.hs_product_description);
             productPrice = itemView.findViewById(R.id.hs_product_price);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent productDetailIntent = new Intent(itemView.getContext(), ProductDetailActivity.class);
-                    itemView.getContext().startActivity(productDetailIntent);
-                }
-            });
         }
 
-        private void setProductImage(String resource){
-            Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.mipmap.home)).into(productImage);
-        }
-
-        private void setProductName(String title){
+        private void setData(String resource, String title, String description, String price){
+            Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.mipmap.smallplaceholder)).into(productImage);
             productName.setText(title);
-        }
-
-        private void setProductDescription(String description){
             productDescription.setText(description);
-        }
-
-        private void setProductPrice(String price){
             productPrice.setText(price);
+
+            if(!title.equals("")) {
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent productDetailIntent = new Intent(itemView.getContext(), ProductDetailActivity.class);
+                        itemView.getContext().startActivity(productDetailIntent);
+                    }
+                });
+            }
         }
     }
 }
