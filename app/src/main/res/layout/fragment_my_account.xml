@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".address.MyAccountFragment">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -30,5 +30,5 @@
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp" />
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </FrameLayout>

@@ -19,6 +19,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -44,30 +46,33 @@ import learncodeonline.in.mymall.order.MyOrdersFragment;
 import learncodeonline.in.mymall.reward.MyRewardsFragment;
 import learncodeonline.in.mymall.wishlist.MyWishlistFragment;
 
-import static learncodeonline.in.mymall.DBqueries.firebaseUser;
+
 import static learncodeonline.in.mymall.authentication.RegisterActivity.setSignUpFragment;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
 
-    private static final int HOME_FRAGMENT=0;
-    private static final int CART_FRAGMENT=1;
-    private static final int ORDERS_FRAGMENT=2;
-    private static final int WISHLIST_FRAGMENT=3;
-    private static final int REWARD_FRAGMENT=4;
-    private static final int ACCOUNT_FRAGMENT=5;
+    private static final int HOME_FRAGMENT = 0;
+    private static final int CART_FRAGMENT = 1;
+    private static final int ORDERS_FRAGMENT = 2;
+    private static final int WISHLIST_FRAGMENT = 3;
+    private static final int REWARD_FRAGMENT = 4;
+    private static final int ACCOUNT_FRAGMENT = 5;
     public static Boolean showCart = false;
 
     private FrameLayout frameLayout;
     private ImageView actionBarLogo;
-    private int currentFragment=-1;
+    private int currentFragment = -1;
     private NavigationView navigationView;
     private Dialog signInDialog;
 
     private Window window;
     private Toolbar toolbar;
 
-   // private AppBarConfiguration mAppBarConfiguration;
+    private FirebaseUser firebaseUser;
+    public static DrawerLayout drawer;
+
+    // private AppBarConfiguration mAppBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements
         window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -99,17 +104,11 @@ public class MainActivity extends AppCompatActivity implements
             setFragment(new HomeFragment(), HOME_FRAGMENT);
         }
 
-        if(firebaseUser == null){
-            navigationView.getMenu().getItem(navigationView.getMenu().size()-1).setEnabled(false);
-        }
-        else{
-            navigationView.getMenu().getItem(navigationView.getMenu().size()-1).setEnabled(true);
-        }
 
         signInDialog = new Dialog(MainActivity.this);
         signInDialog.setContentView(R.layout.sign_in_dialog);
         signInDialog.setCancelable(true);
-        signInDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        signInDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         Button dialogSignInBtn = signInDialog.findViewById(R.id.sign_in_btn_dialog);
         Button dialogSignUpBtn = signInDialog.findViewById(R.id.sign_up_btn_dialog);
@@ -141,21 +140,32 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser == null) {
+            navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(false);
+        } else {
+            navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(true);
+        }
+
+    }
+
+    @Override
     public void onBackPressed() {
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if(drawer.isDrawerOpen(GravityCompat.START)){
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }else {
-            if(currentFragment==HOME_FRAGMENT) {
-                currentFragment=-1;
+        } else {
+            if (currentFragment == HOME_FRAGMENT) {
+                currentFragment = -1;
                 super.onBackPressed();
-            }
-            else{
-                if(showCart){
-                     showCart=false;
-                     finish();
-                }else {
+            } else {
+                if (showCart) {
+                    showCart = false;
+                    finish();
+                } else {
                     actionBarLogo.setVisibility(View.VISIBLE);
                     invalidateOptionsMenu();
                     setFragment(new HomeFragment(), HOME_FRAGMENT);
@@ -168,14 +178,14 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if(currentFragment==HOME_FRAGMENT) {
+        if (currentFragment == HOME_FRAGMENT) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getMenuInflater().inflate(R.menu.main, menu);
         }
         return true;
     }
 
-    private void gotoFragment(String title,Fragment fragment, int fragmentNum) {
+    private void gotoFragment(String title, Fragment fragment, int fragmentNum) {
         //action bar icons are removed by using this function and again on create option menu will run.
         actionBarLogo.setVisibility(View.GONE);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -191,22 +201,21 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.main_search_icon){
+        if (id == R.id.main_search_icon) {
             return true;
-        }else if(id == R.id.main_notification_icon){
-             return true;
-        }else if(id == R.id.main_cart_icon){
+        } else if (id == R.id.main_notification_icon) {
+            return true;
+        } else if (id == R.id.main_cart_icon) {
 
-            if(firebaseUser==null) {
+            if (firebaseUser == null) {
                 signInDialog.show();
-            }
-            else {
+            } else {
                 gotoFragment("My Cart", new MyCartFragment(), CART_FRAGMENT);
             }
             return true;
-        }else if(id == android.R.id.home){
-            if(showCart){
-                showCart=false;
+        } else if (id == android.R.id.home) {
+            if (showCart) {
+                showCart = false;
                 finish();
                 return true;
             }
@@ -218,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if(firebaseUser != null) {
+        if (firebaseUser != null) {
             int id = menuItem.getItemId();
             if (id == R.id.nav_my_mall) {
                 actionBarLogo.setVisibility(View.VISIBLE);
@@ -237,12 +246,14 @@ public class MainActivity extends AppCompatActivity implements
             } else if (id == R.id.nav_my_account) {
                 gotoFragment("My Account", new MyAccountFragment(), ACCOUNT_FRAGMENT);
             } else if (id == R.id.nav_sign_out) {
-
+                FirebaseAuth.getInstance().signOut();
+                Intent registerIntent = new Intent(MainActivity.this,RegisterActivity.class);
+                startActivity(registerIntent);
+                finish();
             }
             drawer.closeDrawer(GravityCompat.START);
             return true;
-        }
-        else{
+        } else {
             drawer.closeDrawer(GravityCompat.START);
             signInDialog.show();
             return false;
@@ -253,20 +264,19 @@ public class MainActivity extends AppCompatActivity implements
 
     private void setFragment(Fragment fragment, int fragmentNum) {
 
-            if(currentFragment!=fragmentNum) {
-                if(fragmentNum==REWARD_FRAGMENT){
-                    window.setStatusBarColor(Color.parseColor("#5B04B1"));
-                    toolbar.setBackgroundColor(Color.parseColor("#5B04B1"));
-                }
-                else{
-                    window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
-                    toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                }
-                currentFragment = fragmentNum;
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-                fragmentTransaction.replace(frameLayout.getId(), fragment);
-                fragmentTransaction.commit();
+        if (currentFragment != fragmentNum) {
+            if (fragmentNum == REWARD_FRAGMENT) {
+                window.setStatusBarColor(Color.parseColor("#5B04B1"));
+                toolbar.setBackgroundColor(Color.parseColor("#5B04B1"));
+            } else {
+                window.setStatusBarColor(getResources().getColor(R.color.colorPrimary));
+                toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             }
+            currentFragment = fragmentNum;
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+            fragmentTransaction.replace(frameLayout.getId(), fragment);
+            fragmentTransaction.commit();
+        }
     }
 }
