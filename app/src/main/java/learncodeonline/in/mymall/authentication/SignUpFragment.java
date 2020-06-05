@@ -62,8 +62,9 @@ public class SignUpFragment extends Fragment {
     private ProgressBar progressBar;
 
     private String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+.[a-z]+";
-
     private FirebaseAuth firebaseAuth;
+
+    public static Boolean disableCloseBtn = false;
 
 
     @Override
@@ -86,6 +87,13 @@ public class SignUpFragment extends Fragment {
 
          firebaseAuth = FirebaseAuth.getInstance();
          firebaseFirestore = FirebaseFirestore.getInstance();
+
+        if(disableCloseBtn){
+            closebtn.setVisibility(View.GONE);
+        }
+        else{
+            closebtn.setVisibility(View.VISIBLE);
+        }
          return view;
     }
 
@@ -170,8 +178,6 @@ public class SignUpFragment extends Fragment {
 
             }
         });
-
-
         signUpbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -265,8 +271,13 @@ public class SignUpFragment extends Fragment {
         }
     }
     private void mainIntent(){
-        Intent mainIntent = new Intent(getActivity(), MainActivity.class);
-        startActivity(mainIntent);
+        if(disableCloseBtn){
+            disableCloseBtn = false;
+        }
+        else {
+            Intent mainIntent = new Intent(getActivity(), MainActivity.class);
+            startActivity(mainIntent);
+        }
         getActivity().finish();
     }
 }
