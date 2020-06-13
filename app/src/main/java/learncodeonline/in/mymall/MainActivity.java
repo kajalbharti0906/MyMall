@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements
     private Window window;
     private Toolbar toolbar;
 
-    private FirebaseUser firebaseUser;
+    private FirebaseUser currentUser;
     public static DrawerLayout drawer;
 
     // private AppBarConfiguration mAppBarConfiguration;
@@ -142,8 +142,8 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser == null) {
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
             navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(false);
         } else {
             navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(true);
@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements
             return true;
         } else if (id == R.id.main_cart_icon) {
 
-            if (firebaseUser == null) {
+            if (currentUser == null) {
                 signInDialog.show();
             } else {
                 gotoFragment("My Cart", new MyCartFragment(), CART_FRAGMENT);
@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (firebaseUser != null) {
+        if (currentUser != null) {
             int id = menuItem.getItemId();
             if (id == R.id.nav_my_mall) {
                 actionBarLogo.setVisibility(View.VISIBLE);
@@ -247,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements
                 gotoFragment("My Account", new MyAccountFragment(), ACCOUNT_FRAGMENT);
             } else if (id == R.id.nav_sign_out) {
                 FirebaseAuth.getInstance().signOut();
+                DBqueries.clearData();
                 Intent registerIntent = new Intent(MainActivity.this,RegisterActivity.class);
                 startActivity(registerIntent);
                 finish();

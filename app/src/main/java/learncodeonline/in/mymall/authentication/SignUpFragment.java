@@ -234,23 +234,36 @@ public class SignUpFragment extends Fragment {
                           public void onComplete(@NonNull Task<AuthResult> task) {
                              if(task.isSuccessful()){
 
-                                 HashMap<Object,String> userdata = new HashMap<>();
+                                 HashMap<String,Object> userdata = new HashMap<>();
                                  userdata.put("fullname",fullName.getText().toString());
 
-                                 firebaseFirestore.collection("USERS")
-                                         .add(userdata)
-                                         .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                 firebaseFirestore.collection("USERS").document(firebaseAuth.getUid())
+                                         .set(userdata)
+                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                              @Override
-                                             public void onComplete(@NonNull Task<DocumentReference> task) {
-                                                if(task.isSuccessful()){
-                                                    mainIntent();
-                                                }else{
-                                                    progressBar.setVisibility(View.INVISIBLE);
-                                                    signUpbtn.setEnabled(true);
-                                                    signUpbtn.setTextColor(Color.rgb(255,255,255));
-                                                    String error = task.getException().getLocalizedMessage();
-                                                    Toast.makeText(getActivity(),error,Toast.LENGTH_SHORT).show();
-                                                }
+                                             public void onComplete(@NonNull Task<Void> task) {
+                                                 if(task.isSuccessful()){
+                                                     HashMap<String,Object> listsize = new HashMap<>();
+                                                     listsize.put("list_size",(long)0);
+                                                     firebaseFirestore.collection("USERS").document(firebaseAuth.getUid()).collection("USER_DATA").document("MY_WISHLIST")
+                                                             .set(listsize).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                         @Override
+                                                         public void onComplete(@NonNull Task<Void> task) {
+                                                             if(task.isSuccessful()){
+                                                                 mainIntent();
+                                                             }else{
+                                                                 progressBar.setVisibility(View.INVISIBLE);
+                                                                 signUpbtn.setEnabled(true);
+                                                                 signUpbtn.setTextColor(Color.rgb(255,255,255));
+                                                                 String error = task.getException().getLocalizedMessage();
+                                                                 Toast.makeText(getActivity(),error,Toast.LENGTH_SHORT).show();
+                                                             }
+                                                         }
+                                                     });
+                                                 }else{
+                                                     String error = task.getException().getLocalizedMessage();
+                                                     Toast.makeText(getActivity(),error,Toast.LENGTH_SHORT).show();
+                                                 }
                                              }
                                          });
                              }else{
