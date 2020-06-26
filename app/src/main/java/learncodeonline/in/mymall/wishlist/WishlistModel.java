@@ -1,6 +1,7 @@
 package learncodeonline.in.mymall.wishlist;
 
 public class WishlistModel {
+    private String productId;
     private String productImage;
     private String productTitle;
     private long freecoupons;
@@ -10,7 +11,8 @@ public class WishlistModel {
     private String cuttedPrice;
     private boolean COD;
 
-    public WishlistModel(String productImage, String productTitle, long freecoupons, String rating, long totalRating, String productPrice, String cuttedPrice, boolean COD) {
+    public WishlistModel(String productId, String productImage, String productTitle, long freecoupons, String rating, long totalRating, String productPrice, String cuttedPrice, boolean COD) {
+        this.productId = productId;
         this.productImage = productImage;
         this.productTitle = productTitle;
         this.freecoupons = freecoupons;
@@ -83,5 +85,13 @@ public class WishlistModel {
 
     public void setCOD(boolean COD) {
         this.COD = COD;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
     }
 }

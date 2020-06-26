@@ -42,6 +42,7 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        String productId = wishlistModelList.get(position).getProductId();
         String resource = wishlistModelList.get(position).getProductImage();
         String title = wishlistModelList.get(position).getProductTitle();
         long freeCouponNum = wishlistModelList.get(position).getFreecoupons();
@@ -50,7 +51,7 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.ViewHo
         String price = wishlistModelList.get(position).getProductPrice();
         String cutprice = wishlistModelList.get(position).getCuttedPrice();
         boolean payMethod = wishlistModelList.get(position).isCOD();
-        holder.setData(resource,title,freeCouponNum,averageRate,totalRatingNum,price,cutprice,payMethod, position);
+        holder.setData(productId,resource,title,freeCouponNum,averageRate,totalRatingNum,price,cutprice,payMethod, position);
 
         if(lastPosition<position) {
             Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(), R.anim.fade_in);
@@ -94,7 +95,7 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.ViewHo
              paymentMethod = itemView.findViewById(R.id.payment_method);
              deleteBtn = itemView.findViewById(R.id.delete_button);
         }
-        private void setData(String resource, String title, long freeCouponNum, String averageRate, long totalRatingNum, String price, String cutprice, boolean payMethod, final int index){
+        private void setData(final String productId, String resource, String title, long freeCouponNum, String averageRate, long totalRatingNum, String price, String cutprice, boolean payMethod, final int index){
             Glide.with(itemView.getContext()).load(resource).apply(new RequestOptions().placeholder(R.mipmap.smallplaceholder)).into(productImage);
             productTitle.setText(title);
             if (freeCouponNum > 0) {
@@ -108,7 +109,7 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.ViewHo
                 freeCoupon.setVisibility(View.INVISIBLE);
                 couponIcon.setVisibility(View.INVISIBLE);
             }
-         rating.setText(averageRate);
+            rating.setText(averageRate);
             totalRating.setText("("+totalRatingNum+")"+"ratings");
             productPrice.setText(price);
             cuttedPrice.setText(cutprice);
@@ -129,14 +130,17 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.ViewHo
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    deleteBtn.setEnabled(false);
-                    DBqueries.removeFromWishlist(index, itemView.getContext());
+                    if(!ProductDetailActivity.running_wishlist_query) {
+                        ProductDetailActivity.running_wishlist_query = true;
+                        DBqueries.removeFromWishlist(index, itemView.getContext());
+                    }
                 }
             });
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent productDetailsIntent = new Intent(itemView.getContext(), ProductDetailActivity.class);
+                    productDetailsIntent.putExtra("PRODUCT_ID",productId);
                     itemView.getContext().startActivity(productDetailsIntent);
                 }
             });
