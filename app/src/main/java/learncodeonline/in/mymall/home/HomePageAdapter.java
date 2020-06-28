@@ -42,7 +42,7 @@ public class HomePageAdapter extends RecyclerView.Adapter {
     public HomePageAdapter(List<HomePageModel> homePageModelList ) {
         this.homePageModelList = homePageModelList;
         recycledViewPool = new RecyclerView.RecycledViewPool();
-    }
+}
 
     @Override
     public int getItemViewType(int position) {
@@ -320,7 +320,7 @@ public class HomePageAdapter extends RecyclerView.Adapter {
 
                  Glide.with(itemView.getContext()).load(horizontalProductScrollModelList.get(x).getProductImage()).apply(new RequestOptions().placeholder(R.mipmap.smallplaceholder)).into(productImage);
                  productTitle.setText(horizontalProductScrollModelList.get(x).getProductName());
-                 productPrice.setText(horizontalProductScrollModelList.get(x).getProductPrice());
+                 productPrice.setText("Rs."+horizontalProductScrollModelList.get(x).getProductPrice()+"/-");
                  productDescription.setText(horizontalProductScrollModelList.get(x).getProductDescription());
                  gridproductlayout.getChildAt(x).setBackgroundColor(Color.parseColor("#FFFFFF"));
 

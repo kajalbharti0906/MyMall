@@ -1,6 +1,7 @@
 package learncodeonline.in.mymall.cart;
 
 import android.app.Dialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,12 +79,28 @@ public class CartAdapter extends RecyclerView.Adapter {
                 ((cartItemViewholder)holder).setItemDetails(productID,resource,title,freeCoupon,productPrice,cuttedPrice,offersApplied, position);
                 break;
             case CartItemModel.TOTAL_AMOUNT:
-                String totalItem = cartItemModelList.get(position).getTotalItem();
-                String totalItemPrice = cartItemModelList.get(position).getTotalItemPrice();
-                String totalPrice = cartItemModelList.get(position).getTotalPrice();
-                String deliveryPrice = cartItemModelList.get(position).getDeliveryPrice();
-                String savedAmount = cartItemModelList.get(position).getSavedAmount();
-                ((cartTotalAmountViewholder)holder).setTotalAmount(totalItem,totalItemPrice,totalPrice,deliveryPrice,savedAmount);
+                int totalItems = 0;
+                int totalItemPrice = 0;
+                String deliveryPrice;
+                int totalPrice;
+                int savedAmount = 0;
+
+                for(int x=0;x<cartItemModelList.size();x++){
+                    if(cartItemModelList.get(x).getType() == CartItemModel.CART_ITEM){
+                        totalItems++;
+                        totalItemPrice = totalItemPrice + Integer.parseInt(cartItemModelList.get(x).getProductPrice());
+                    }
+                }
+                if(totalItemPrice>500){
+                    deliveryPrice = "FREE";
+                    totalPrice = totalItemPrice;
+                }
+                else{
+                    deliveryPrice = "60";
+                    totalPrice = totalItemPrice + 60;
+                }
+
+                ((cartTotalAmountViewholder)holder).setTotalAmount(totalItems,totalItemPrice,deliveryPrice,totalPrice,savedAmount);
                 break;
             default:
                 return;
@@ -143,8 +160,8 @@ public class CartAdapter extends RecyclerView.Adapter {
                 freeCoupons.setVisibility(View.INVISIBLE);
                 freeCouponIcon.setVisibility(View.INVISIBLE);
             }
-            productPrice.setText(productPriceText);
-            cuttedPrice.setText(cuttedPriceText);
+            productPrice.setText("Rs."+productPriceText+"/-");
+            cuttedPrice.setText("Rs."+cuttedPriceText+"/-");
             if (offersAppliedNum > 0) {
                 offersApplied.setVisibility(View.VISIBLE);
                 offersApplied.setText(offersAppliedNum + " Offers applied");
@@ -209,12 +226,18 @@ public class CartAdapter extends RecyclerView.Adapter {
             savedAmount = itemView.findViewById(R.id.saved_amount);
         }
 
-        private void setTotalAmount(String totalItemText, String totalItemPriceText, String totalPriceText, String deliveryPriceText, String savedAmountText) {
-            totalItem.setText(totalItemText);
-            totalItemPrice.setText(totalItemPriceText);
-            totalPrice.setText(totalPriceText);
-            deliveryPrice.setText(deliveryPriceText);
-            savedAmount.setText(savedAmountText);
+        private void setTotalAmount(int totalItemText, int totalItemPriceText, String deliveryPriceText, int totalPriceText,  int savedAmountText) {
+            totalItem.setText("Price("+totalItemText+" items)");
+            totalItemPrice.setText("Rs."+totalItemPriceText+"/-");
+            totalPrice.setText("Rs."+totalPriceText+"/-");
+            if(deliveryPrice.equals("FREE")) {
+
+                deliveryPrice.setText(deliveryPriceText);
+            }else{
+                Log.i("mum", String.valueOf(deliveryPrice));
+                deliveryPrice.setText("Rs."+deliveryPriceText+"/-");
+            }
+            savedAmount.setText("You saved Rs."+savedAmountText+"/- on this order.");
         }
     }
 }

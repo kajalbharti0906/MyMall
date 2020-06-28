@@ -3,6 +3,7 @@ package learncodeonline.in.mymall.product;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ public class ProductSpecificationAdapter extends RecyclerView.Adapter<ProductSpe
     private List<ProductSpecificationModel> productSpecificationModelList;
 
     public ProductSpecificationAdapter(List<ProductSpecificationModel> productSpecificationModelList) {
+        Log.i("perul", String.valueOf(productSpecificationModelList.size()));
         this.productSpecificationModelList = productSpecificationModelList;
     }
 

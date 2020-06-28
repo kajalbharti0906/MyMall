@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/badge_icon"
-        android:layout_width="24dp"
-        android:layout_height="25dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:src="@mipmap/whitecart_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +24,8 @@
         android:layout_marginStart="12dp"
         android:layout_marginBottom="12dp"
         android:background="@drawable/badge_count"
-        android:text="99"
+        android:text="0"
+        android:visibility="invisible"
         android:textAlignment="center"
         android:textColor="@color/colorAccent"
         android:textSize="10sp"

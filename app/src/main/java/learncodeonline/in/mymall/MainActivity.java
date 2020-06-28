@@ -44,6 +44,7 @@ import learncodeonline.in.mymall.authentication.SignUpFragment;
 import learncodeonline.in.mymall.cart.MyCartFragment;
 import learncodeonline.in.mymall.home.HomeFragment;
 import learncodeonline.in.mymall.order.MyOrdersFragment;
+import learncodeonline.in.mymall.product.ProductDetailActivity;
 import learncodeonline.in.mymall.reward.MyRewardsFragment;
 import learncodeonline.in.mymall.wishlist.MyWishlistFragment;
 
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private Window window;
     private Toolbar toolbar;
+    private TextView badgeCount;
 
     private FirebaseUser currentUser;
     public static DrawerLayout drawer;
@@ -184,16 +186,23 @@ public class MainActivity extends AppCompatActivity implements
             getMenuInflater().inflate(R.menu.main, menu);
 
             MenuItem cartItem = menu.findItem(R.id.main_cart_icon);
-            if(DBqueries.cartList.size()>0){
                 cartItem.setActionView(R.layout.badge_layout);
                 ImageView badgeIcon = cartItem.getActionView().findViewById(R.id.badge_icon);
                 badgeIcon.setImageResource(R.mipmap.whitecart_icon);
-                TextView badgeCount = cartItem.getActionView().findViewById(R.id.badge_count);
-                if(DBqueries.cartList.size() < 99) {
-                    badgeCount.setText(String.valueOf(DBqueries.cartList.size()));
-                }
-                else{
-                    badgeCount.setText("99");
+                badgeCount = cartItem.getActionView().findViewById(R.id.badge_count);
+                if(currentUser != null){
+                    if(DBqueries.cartList.size()==0){
+                        DBqueries.loadCartList(MainActivity.this, new Dialog(MainActivity.this), false, badgeCount);
+                    }
+                    else{
+                        badgeCount.setVisibility(View.VISIBLE);
+                        if(DBqueries.cartList.size() < 99) {
+                            badgeCount.setText(String.valueOf(DBqueries.cartList.size()));
+                        }
+                        else{
+                            badgeCount.setText("99");
+                        }
+                    }
                 }
 
                 cartItem.getActionView().setOnClickListener(new View.OnClickListener() {
@@ -206,10 +215,7 @@ public class MainActivity extends AppCompatActivity implements
                         }
                     }
                 });
-            }
-            else{
-                cartItem.setActionView(null);
-            }
+
         }
         return true;
     }
