@@ -106,11 +106,15 @@ public class AddAddressActivity extends AppCompatActivity {
                                     if (!TextUtils.isEmpty(mobileNo.getText()) && mobileNo.length() == 10) {
 
                                         loadingDialog.show();
-                                        final String fullAddress = city.getText().toString() + locality.getText().toString() + flatNo.getText().toString() + landmark.getText().toString();
+                                        final String fullAddress = flatNo.getText().toString() + " " + locality.getText().toString() + " " + landmark.getText().toString() + " " + city.getText().toString() + " " + selectedState;
 
                                         Map<String,Object> addAddress = new HashMap<>();
                                         addAddress.put("list_size", (long) DBqueries.adressesModelList.size() + 1);
-                                        addAddress.put("fullname_" + String.valueOf((long) DBqueries.adressesModelList.size() + 1), name.getText().toString() + "-" + mobileNo.getText().toString());
+                                        if (!TextUtils.isEmpty(alternateMobileNo.getText()) && alternateMobileNo.length() == 10) {
+                                            addAddress.put("fullname_" + String.valueOf((long) DBqueries.adressesModelList.size() + 1), name.getText().toString() + "-" + mobileNo.getText().toString() + " or " + alternateMobileNo.getText().toString());
+                                        }else{
+                                            addAddress.put("fullname_" + String.valueOf((long) DBqueries.adressesModelList.size() + 1), name.getText().toString() + "-" + mobileNo.getText().toString());
+                                        }
                                         addAddress.put("address_" + String.valueOf((long) DBqueries.adressesModelList.size() + 1), fullAddress);
                                         addAddress.put("pincode_" + String.valueOf((long) DBqueries.adressesModelList.size() + 1), pincode.getText().toString());
                                         addAddress.put("selected_" + String.valueOf((long) DBqueries.adressesModelList.size() + 1), true);
@@ -129,9 +133,18 @@ public class AddAddressActivity extends AppCompatActivity {
                                                     if(DBqueries.adressesModelList.size()>0) {
                                                         DBqueries.adressesModelList.get(DBqueries.selectedAddress).setSelected(false);
                                                     }
-                                                    DBqueries.adressesModelList.add(new AdressesModel(name.getText().toString() + "-" + mobileNo.getText().toString() ,fullAddress ,pincode.getText().toString(),true));
-                                                    Intent deliveryIntent = new Intent(AddAddressActivity.this, DeliveryActivity.class);
-                                                    startActivity(deliveryIntent);
+                                                    if(TextUtils.isEmpty(alternateMobileNo.getText())) {
+                                                        DBqueries.adressesModelList.add(new AdressesModel(name.getText().toString() + "-" + mobileNo.getText().toString(), fullAddress, pincode.getText().toString(), true));
+                                                    }else{
+                                                        DBqueries.adressesModelList.add(new AdressesModel(name.getText().toString() + "-" + mobileNo.getText().toString() + " or " + alternateMobileNo.getText().toString(), fullAddress, pincode.getText().toString(), true));
+                                                    }
+                                                    if(getIntent().getStringExtra("INTENT").equals("deliveryIntent")) {
+                                                        Intent deliveryIntent = new Intent(AddAddressActivity.this, DeliveryActivity.class);
+                                                        startActivity(deliveryIntent);
+                                                    }else {
+                                                        MyAddressActivity.refreshItem(DBqueries.selectedAddress,DBqueries.adressesModelList.size()-1);
+                                                    }
+                                                    DBqueries.selectedAddress = DBqueries.adressesModelList.size() - 1;
                                                     finish();
                                                 }
                                                 else{
@@ -143,24 +156,24 @@ public class AddAddressActivity extends AppCompatActivity {
                                         });
 
                                     }else{
-                                        mobileNo.setFocusable(true);
+                                        mobileNo.requestFocus();
                                         Toast.makeText(AddAddressActivity.this,"Please provide valid No.",Toast.LENGTH_SHORT).show();
                                     }
                                 }else{
-                                    name.setSelected(true);
+                                    name.requestFocus();
                                 }
                             }else{
-                                pincode.setFocusable(true);
+                                pincode.requestFocus();
                                 Toast.makeText(AddAddressActivity.this,"Please provide valid pincode",Toast.LENGTH_SHORT).show();
                             }
                         }else{
-                            flatNo.setSelected(true);
+                            flatNo.requestFocus();
                         }
                     } else{
-                        locality.setSelected(true);
+                        locality.requestFocus();
                     }
                 } else{
-                    city.setSelected(true);
+                    city.requestFocus();
                 }
 
             }

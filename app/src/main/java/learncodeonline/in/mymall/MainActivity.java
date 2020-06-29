@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -71,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements
     private Window window;
     private Toolbar toolbar;
     private TextView badgeCount;
+    private int scrollFlags;
+    private AppBarLayout.LayoutParams params;
 
     private FirebaseUser currentUser;
     public static DrawerLayout drawer;
@@ -87,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements
 
         window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        params = (AppBarLayout.LayoutParams)toolbar.getLayoutParams();
+        scrollFlags = params.getScrollFlags();
 
         drawer = findViewById(R.id.drawer_layout);
 
@@ -229,6 +235,9 @@ public class MainActivity extends AppCompatActivity implements
         setFragment(fragment, fragmentNum);
         if (fragmentNum == CART_FRAGMENT) {
             navigationView.getMenu().getItem(3).setChecked(true);
+            params.setScrollFlags(0);
+        }else{
+            params.setScrollFlags(scrollFlags);
         }
     }
 

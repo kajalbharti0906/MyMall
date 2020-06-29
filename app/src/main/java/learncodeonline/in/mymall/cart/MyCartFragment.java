@@ -2,7 +2,6 @@ package learncodeonline.in.mymall.cart;
 
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,7 +15,6 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import learncodeonline.in.mymall.DBqueries;
-import learncodeonline.in.mymall.address.AddAddressActivity;
 import learncodeonline.in.mymall.R;
 
 
@@ -68,7 +66,7 @@ public class MyCartFragment extends Fragment {
             loadingDialog.dismiss();
         }
 
-        cartAdapter = new CartAdapter(DBqueries.cartItemModelList, totalAmount);
+        cartAdapter = new CartAdapter(DBqueries.cartItemModelList, totalAmount, true);
         cartItemRecyclerView.setAdapter(cartAdapter);
         cartAdapter.notifyDataSetChanged();
 

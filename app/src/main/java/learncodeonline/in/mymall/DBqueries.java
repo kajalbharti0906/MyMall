@@ -420,10 +420,10 @@ public class DBqueries {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     Intent deliveryIntent;
-                    Log.i("kajal", String.valueOf((long)task.getResult().get("list_size")));
+                   // Log.i("kajal", String.valueOf((long)task.getResult().get("list_size")));
                     if((long)task.getResult().get("list_size") == 0){
                         deliveryIntent = new Intent(context, AddAddressActivity.class);
-
+                        deliveryIntent.putExtra("INTENT","deliveryIntent");
                     }
                     else{
 
