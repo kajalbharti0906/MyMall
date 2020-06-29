@@ -2,8 +2,10 @@ package learncodeonline.in.mymall;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +26,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import learncodeonline.in.mymall.address.AddAddressActivity;
+import learncodeonline.in.mymall.address.AdressesModel;
+import learncodeonline.in.mymall.address.DeliveryActivity;
 import learncodeonline.in.mymall.cart.CartItemModel;
 import learncodeonline.in.mymall.cart.MyCartFragment;
 import learncodeonline.in.mymall.home.CategoryAdapter;
@@ -42,6 +47,7 @@ import static learncodeonline.in.mymall.product.ProductDetailActivity.productID;
 
 public class DBqueries {
 
+
     public static FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     public static List<CategoryModel> categoryModelList = new ArrayList<CategoryModel>();
 
@@ -56,6 +62,9 @@ public class DBqueries {
 
     public static List<String> cartList = new ArrayList<>();
     public static List<CartItemModel> cartItemModelList = new ArrayList<>();
+
+    public static int selectedAddress = -1;
+    public static List<AdressesModel> adressesModelList = new ArrayList<>();
 
     public static void loadCategories(final RecyclerView categoryRecyclerView, final CategoryAdapter categoryAdapter, final Context context){
 
@@ -82,6 +91,7 @@ public class DBqueries {
                 });
 
     }
+
     public static void loadFragmentData(final RecyclerView homePageRecyclerView, final Context context, final int index, String categoryNames){
 
         firebaseFirestore.collection("CATEGORIES")
@@ -218,6 +228,7 @@ public class DBqueries {
             }
         });
 }
+
     public static void removeFromWishlist(final int index, final Context context){
         final String removedProductId = wishList.get(index);
         wishList.remove(index);
@@ -395,6 +406,45 @@ public class DBqueries {
                     Toast.makeText(context,error,Toast.LENGTH_SHORT).show();
                 }
                 ProductDetailActivity.running_cart_query = false;
+            }
+        });
+    }
+
+    public static void loadAddresses(final Context context, final Dialog loadingDialog){
+
+        adressesModelList.clear();
+
+        firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_DATA").document("MY_ADDRESSES")
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    Intent deliveryIntent;
+                    Log.i("kajal", String.valueOf((long)task.getResult().get("list_size")));
+                    if((long)task.getResult().get("list_size") == 0){
+                        deliveryIntent = new Intent(context, AddAddressActivity.class);
+
+                    }
+                    else{
+
+                        for(long x=1;x<(long)task.getResult().get("list_size")+1;x++){
+                            adressesModelList.add(new AdressesModel(task.getResult().get("fullname_"+x).toString(),
+                                    task.getResult().get("address_"+x).toString(),
+                                    task.getResult().get("pincode_"+x).toString(),
+                                    (boolean)task.getResult().get("selected_"+x)));
+                            if((boolean)task.getResult().get("selected_"+x)){
+                                selectedAddress = Integer.parseInt(String.valueOf(x-1));
+                            }
+                        }
+
+                        deliveryIntent = new Intent(context, DeliveryActivity.class);
+                    }
+                    context.startActivity(deliveryIntent);
+                }else{
+                    String error = task.getException().getLocalizedMessage();
+                    Toast.makeText(context,error,Toast.LENGTH_SHORT).show();
+                }
+                loadingDialog.dismiss();
             }
         });
     }

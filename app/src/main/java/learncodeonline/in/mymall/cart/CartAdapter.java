@@ -1,7 +1,6 @@
 package learncodeonline.in.mymall.cart;
 
 import android.app.Dialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +28,11 @@ public class CartAdapter extends RecyclerView.Adapter {
 
     private List<CartItemModel> cartItemModelList;
     private int lastPosition = -1;
+    private TextView cartTotalAmount;
 
-    public CartAdapter(List<CartItemModel> cartItemModelList) {
+    public CartAdapter(List<CartItemModel> cartItemModelList, TextView cartTotalAmount) {
         this.cartItemModelList = cartItemModelList;
+        this.cartTotalAmount = cartTotalAmount;
     }
 
     @Override
@@ -230,11 +231,10 @@ public class CartAdapter extends RecyclerView.Adapter {
             totalItem.setText("Price("+totalItemText+" items)");
             totalItemPrice.setText("Rs."+totalItemPriceText+"/-");
             totalPrice.setText("Rs."+totalPriceText+"/-");
-            if(deliveryPrice.equals("FREE")) {
-
+            cartTotalAmount.setText("Rs."+totalPriceText+"/-");
+            if(deliveryPriceText.equals("FREE")) {
                 deliveryPrice.setText(deliveryPriceText);
             }else{
-                Log.i("mum", String.valueOf(deliveryPrice));
                 deliveryPrice.setText("Rs."+deliveryPriceText+"/-");
             }
             savedAmount.setText("You saved Rs."+savedAmountText+"/- on this order.");
