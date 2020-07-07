@@ -23,10 +23,12 @@ public class CartItemModel {
     private String cuttedPrice;
     private Long freeCoupon;
     private Long productQuantity;
+    private Long maxQuantity;
     private Long offersApplied;
     private Long couponsApplied;
+    private boolean inStock;
 
-    public CartItemModel(int type, String productID, String productImage, String productTitle, String productPrice, String cuttedPrice, Long freeCoupon, Long productQuantity, Long offersApplied, Long couponsApplied) {
+    public CartItemModel(int type, String productID, String productImage, String productTitle, String productPrice, String cuttedPrice, Long freeCoupon, Long productQuantity, Long maxQuantity, Long offersApplied, Long couponsApplied, boolean inStock) {
         this.type = type;
         this.productID = productID;
         this.productImage = productImage;
@@ -35,8 +37,18 @@ public class CartItemModel {
         this.cuttedPrice = cuttedPrice;
         this.freeCoupon = freeCoupon;
         this.productQuantity = productQuantity;
+        this.maxQuantity = maxQuantity;
         this.offersApplied = offersApplied;
         this.couponsApplied = couponsApplied;
+        this.inStock = inStock;
+    }
+
+    public boolean isInStock() {
+        return inStock;
+    }
+
+    public void setInStock(boolean inStock) {
+        this.inStock = inStock;
     }
 
     public String getProductImage() {
@@ -85,6 +97,14 @@ public class CartItemModel {
 
     public void setProductQuantity(Long productQuantity) {
         this.productQuantity = productQuantity;
+    }
+
+    public Long getMaxQuantity() {
+        return maxQuantity;
+    }
+
+    public void setMaxQuantity(Long maxQuantity) {
+        this.maxQuantity = maxQuantity;
     }
 
     public Long getOffersApplied() {

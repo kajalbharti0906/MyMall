@@ -23,7 +23,7 @@ public class ProductSpecificationAdapter extends RecyclerView.Adapter<ProductSpe
     private List<ProductSpecificationModel> productSpecificationModelList;
 
     public ProductSpecificationAdapter(List<ProductSpecificationModel> productSpecificationModelList) {
-        Log.i("perul", String.valueOf(productSpecificationModelList.size()));
+//        Log.i("perul", String.valueOf(productSpecificationModelList.size()));
         this.productSpecificationModelList = productSpecificationModelList;
     }
 

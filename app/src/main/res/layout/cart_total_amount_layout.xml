@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorAccent"
+    android:background="@color/RecyclerViewBackground"
     android:layout_marginTop="4dp"
     android:orientation="vertical">
 
@@ -152,6 +152,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ConstraintLayout"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/happy_shopping" />
+        app:srcCompat="@drawable/happy_shopping_image" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

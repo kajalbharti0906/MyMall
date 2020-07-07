@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
+import learncodeonline.in.mymall.DBqueries;
 import learncodeonline.in.mymall.MainActivity;
 import learncodeonline.in.mymall.R;
 import learncodeonline.in.mymall.wishlist.WishlistModel;
@@ -178,9 +179,10 @@ public class HomeFragment extends Fragment {
 
         private void reloadPage(){
             networkInfo = connectivityManager.getActiveNetworkInfo();
-            categoryModelList.clear();
-            lists.clear();
-            loadedCategoriesNames.clear();
+//            categoryModelList.clear();
+//            lists.clear();
+//            loadedCategoriesNames.clear();
+            DBqueries.clearData();
 
             if (networkInfo != null && networkInfo.isConnected() == true) {
                 MainActivity.drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);

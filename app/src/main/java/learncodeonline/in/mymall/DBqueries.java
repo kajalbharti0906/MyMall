@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -137,7 +137,8 @@ public class DBqueries {
                                                 (long)documentSnapshot.get("total_rating_"+x),
                                                 documentSnapshot.get("product_price_"+x).toString(),
                                                 documentSnapshot.get("cutted_price_"+x).toString(),
-                                                (boolean)documentSnapshot.get("COD_"+x)));
+                                                (boolean)documentSnapshot.get("COD_"+x),
+                                                (boolean) documentSnapshot.get("in_stock_"+x)));
                                     }
                                     lists.get(index).add(new HomePageModel(2,documentSnapshot.get("layout_title").toString(), documentSnapshot.get("layout_background").toString(), horizontalProductScrollModelList,viewAllProductList));
                             }
@@ -208,7 +209,8 @@ public class DBqueries {
                                                 (long) task.getResult().get("total_ratings"),
                                                 task.getResult().get("product_price").toString(),
                                                 task.getResult().get("cutted_price").toString(),
-                                                (boolean) task.getResult().get("COD")));
+                                                (boolean) task.getResult().get("COD"),
+                                                (boolean) task.getResult().get("in_stock")));
 
                                         MyWishlistFragment.wishlistAdapter.notifyDataSetChanged();
                                     } else {
@@ -299,7 +301,7 @@ public class DBqueries {
         }
     }
 
-    public static void loadCartList(final Context context, final Dialog dialog, final boolean loadProductData, final TextView badgeCount){
+    public static void loadCartList(final Context context, final Dialog dialog, final boolean loadProductData, final TextView badgeCount, final TextView cartTotalAmount){
         cartList.clear();
         firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_DATA").document("MY_CART")
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -334,11 +336,15 @@ public class DBqueries {
                                                 task.getResult().get("cutted_price").toString(),
                                                 (long) task.getResult().get("free_coupons"),
                                                 (long) 1,
+                                                (long) task.getResult().get("max_quantity"),
                                                 (long) 0,
-                                                (long) 0));
+                                                (long) 0,
+                                                (boolean) task.getResult().get("in_stock")));
 
                                         if(cartList.size() == 1){
                                             cartItemModelList.add(new CartItemModel(CartItemModel.TOTAL_AMOUNT));
+                                            LinearLayout parent = (LinearLayout) cartTotalAmount.getParent().getParent();
+                                            parent.setVisibility(View.VISIBLE);
                                         }
                                         if(cartList.size() == 0){
                                             cartItemModelList.clear();
@@ -375,7 +381,7 @@ public class DBqueries {
         });
     }
 
-    public static void removeFromCart(final int index, final Context context){
+    public static void removeFromCart(final int index, final Context context, final TextView cartTotalAmount){
         final String removedProductId = cartList.get(index);
         cartList.remove(index);
         Map<String,Object> updateCartList = new HashMap<>();
@@ -395,6 +401,8 @@ public class DBqueries {
                         MyCartFragment.cartAdapter.notifyDataSetChanged();
                     }
                     if(cartList.size() == 0){
+                        LinearLayout parent = (LinearLayout) cartTotalAmount.getParent().getParent();
+                        parent.setVisibility(View.GONE);
                         cartItemModelList.clear();
                     }
 
@@ -429,6 +437,7 @@ public class DBqueries {
 
                         for(long x=1;x<(long)task.getResult().get("list_size")+1;x++){
                             adressesModelList.add(new AdressesModel(task.getResult().get("fullname_"+x).toString(),
+                                    task.getResult().getString("mobile_no_"+x),
                                     task.getResult().get("address_"+x).toString(),
                                     task.getResult().get("pincode_"+x).toString(),
                                     (boolean)task.getResult().get("selected_"+x)));
@@ -458,5 +467,8 @@ public class DBqueries {
         wishlistModelList.clear();
         cartList.clear();
         cartItemModelList.clear();
+        myRatedIds.clear();
+        myRating.clear();
+        adressesModelList.clear();
     }
 }
