@@ -1,5 +1,8 @@
 package learncodeonline.in.mymall.cart;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CartItemModel {
 
     public static final int CART_ITEM = 0;
@@ -27,6 +30,7 @@ public class CartItemModel {
     private Long offersApplied;
     private Long couponsApplied;
     private boolean inStock;
+    private List<String> qtyIDs;
 
     public CartItemModel(int type, String productID, String productImage, String productTitle, String productPrice, String cuttedPrice, Long freeCoupon, Long productQuantity, Long maxQuantity, Long offersApplied, Long couponsApplied, boolean inStock) {
         this.type = type;
@@ -41,6 +45,15 @@ public class CartItemModel {
         this.offersApplied = offersApplied;
         this.couponsApplied = couponsApplied;
         this.inStock = inStock;
+        qtyIDs = new ArrayList<>();
+    }
+
+    public List<String> getQtyIDs() {
+        return qtyIDs;
+    }
+
+    public void setQtyIDs(List<String> qtyIDs) {
+        this.qtyIDs = qtyIDs;
     }
 
     public boolean isInStock() {

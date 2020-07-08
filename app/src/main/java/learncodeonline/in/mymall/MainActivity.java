@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements
     private static final int ACCOUNT_FRAGMENT = 5;
     public static Boolean showCart = false;
     public static Activity mainActivity;
+    public static boolean resetMainactivity = false;
 
     private FrameLayout frameLayout;
     private ImageView actionBarLogo;
@@ -73,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private FirebaseUser currentUser;
     public static DrawerLayout drawer;
+
 
     // private AppBarConfiguration mAppBarConfiguration;
 
@@ -153,6 +155,12 @@ public class MainActivity extends AppCompatActivity implements
             navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(false);
         } else {
             navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(true);
+        }
+        if(resetMainactivity){
+            resetMainactivity = false;
+            actionBarLogo.setVisibility(View.VISIBLE);
+            setFragment(new HomeFragment(), HOME_FRAGMENT);
+            navigationView.getMenu().getItem(0).setChecked(true);
         }
         invalidateOptionsMenu();
     }

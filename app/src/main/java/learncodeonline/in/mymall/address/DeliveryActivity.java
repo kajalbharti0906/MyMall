@@ -1,60 +1,63 @@
 package learncodeonline.in.mymall.address;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+        import androidx.annotation.NonNull;
+        import androidx.appcompat.app.AppCompatActivity;
+        import androidx.appcompat.widget.Toolbar;
+        import androidx.constraintlayout.widget.ConstraintLayout;
+        import androidx.core.app.ActivityCompat;
+        import androidx.core.content.ContextCompat;
+        import androidx.recyclerview.widget.LinearLayoutManager;
+        import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
-import android.app.Dialog;
-import android.app.DownloadManager;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
+        import android.Manifest;
+        import android.app.Dialog;
+        import android.app.DownloadManager;
+        import android.content.Intent;
+        import android.content.pm.PackageManager;
+        import android.os.Bundle;
+        import android.view.MenuItem;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.Button;
+        import android.widget.ImageButton;
+        import android.widget.TextView;
+        import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.paytm.pgsdk.PaytmOrder;
-import com.paytm.pgsdk.PaytmPGService;
-import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
+        import com.android.volley.AuthFailureError;
+        import com.android.volley.DefaultRetryPolicy;
+        import com.android.volley.Request;
+        import com.android.volley.RequestQueue;
+        import com.android.volley.Response;
+        import com.android.volley.VolleyError;
+        import com.android.volley.toolbox.StringRequest;
+        import com.android.volley.toolbox.Volley;
+        import com.google.android.gms.tasks.OnCompleteListener;
+        import com.google.android.gms.tasks.Task;
+        import com.google.firebase.auth.FirebaseAuth;
+        import com.google.firebase.firestore.FirebaseFirestore;
+        import com.google.firebase.firestore.Query;
+        import com.google.firebase.firestore.QueryDocumentSnapshot;
+        import com.google.firebase.firestore.QuerySnapshot;
+        import com.paytm.pgsdk.PaytmOrder;
+        import com.paytm.pgsdk.PaytmPGService;
+        import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+        import org.json.JSONException;
+        import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+        import java.util.ArrayList;
+        import java.util.HashMap;
+        import java.util.List;
+        import java.util.Map;
+        import java.util.UUID;
 
-import learncodeonline.in.mymall.DBqueries;
-import learncodeonline.in.mymall.MainActivity;
-import learncodeonline.in.mymall.OTPverificationActivity;
-import learncodeonline.in.mymall.R;
-import learncodeonline.in.mymall.cart.CartAdapter;
-import learncodeonline.in.mymall.cart.CartItemModel;
-import learncodeonline.in.mymall.product.ProductDetailActivity;
+        import learncodeonline.in.mymall.DBqueries;
+        import learncodeonline.in.mymall.MainActivity;
+        import learncodeonline.in.mymall.OTPverificationActivity;
+        import learncodeonline.in.mymall.R;
+        import learncodeonline.in.mymall.cart.CartAdapter;
+        import learncodeonline.in.mymall.cart.CartItemModel;
+        import learncodeonline.in.mymall.product.ProductDetailActivity;
 
 public class DeliveryActivity extends AppCompatActivity {
 
@@ -76,10 +79,16 @@ public class DeliveryActivity extends AppCompatActivity {
     private ConstraintLayout orderConfirmation;
     private ImageButton continueShoppingBtn;
     private TextView orderId;
-    private boolean successResponse = false;
-    public static boolean fromCart;
     private String order_id;
+
+    private boolean successResponse = false;
+    private boolean allProductsAvailable = true;
+
+    private FirebaseFirestore firebaseFirestore;
+
+    public static boolean fromCart;
     public static boolean codOrderConfirmed = false;
+    public static boolean getQtyIds = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +110,8 @@ public class DeliveryActivity extends AppCompatActivity {
         orderConfirmation = findViewById(R.id.order_confirmation_layout);
         continueShoppingBtn = findViewById(R.id.continue_shopping_btn);
         orderId = findViewById(R.id.order_id);
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        getQtyIds = true;
 
         /////// loading dialog
         loadingDialog = new Dialog(DeliveryActivity.this);
@@ -125,7 +136,7 @@ public class DeliveryActivity extends AppCompatActivity {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         deliveryRecyclerView.setLayoutManager(layoutManager);
 
-        CartAdapter cartAdapter = new CartAdapter(DBqueries.cartItemModelList, totalAmount, false);
+        CartAdapter cartAdapter = new CartAdapter(DeliveryActivity.cartItemModelList, totalAmount, false);
         deliveryRecyclerView.setAdapter(cartAdapter);
         cartAdapter.notifyDataSetChanged();
 
@@ -133,6 +144,7 @@ public class DeliveryActivity extends AppCompatActivity {
         changeOrAddNewAddressbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getQtyIds = false;
                 Intent myaddressesIntent = new Intent(DeliveryActivity.this, MyAddressActivity.class);
                 myaddressesIntent.putExtra("MODE",SELECT_ADDRESS);
                 startActivity(myaddressesIntent);
@@ -142,13 +154,18 @@ public class DeliveryActivity extends AppCompatActivity {
         continueBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                paymentMethodDialog.show();
+                if(allProductsAvailable) {
+                    paymentMethodDialog.show();
+                }else{
+                    //////// nothing
+                }
             }
         });
 
         cod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getQtyIds = false;
                 paymentMethodDialog.dismiss();
                 Intent otpIntent = new Intent(DeliveryActivity.this, OTPverificationActivity.class);
                 otpIntent.putExtra("mobileNo",mobileNo.substring(0,10));
@@ -159,6 +176,7 @@ public class DeliveryActivity extends AppCompatActivity {
         paytm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                getQtyIds = false;
                 paymentMethodDialog.dismiss();
                 loadingDialog.show();
                 if (ContextCompat.checkSelfPermission(DeliveryActivity.this, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED) {
@@ -198,7 +216,7 @@ public class DeliveryActivity extends AppCompatActivity {
                                     public void onTransactionResponse(Bundle inResponse) {
                                         //Toast.makeText(getApplicationContext(), "Payment Transaction response " + inResponse.toString(), Toast.LENGTH_LONG).show();
                                         if(inResponse.getString("STATUS").equals("TXN_SUCCESS")) {
-                                        showConfirmationLayout();
+                                            showConfirmationLayout();
                                         }
                                     }
 
@@ -266,6 +284,52 @@ public class DeliveryActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        /////accessing quantity
+        if(getQtyIds) {
+            for (int x = 0; x < cartItemModelList.size() - 1; x++) {
+                final int finalX = x;
+                final int finalX1 = x;
+                firebaseFirestore.collection("PRODUCTS").document(cartItemModelList.get(x).getProductId()).collection("QUANTITY").orderBy("available", Query.Direction.DESCENDING).limit(cartItemModelList.get(x).getProductQuantity()).get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (final QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
+                                        if ((boolean) queryDocumentSnapshot.get("available")) {
+                                            firebaseFirestore.collection("PRODUCTS").document(cartItemModelList.get(finalX1).getProductId()).collection("QUANTITY").document(queryDocumentSnapshot.getId()).update("available", false)
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()) {
+                                                                cartItemModelList.get(finalX).getQtyIDs().add(queryDocumentSnapshot.getId());
+                                                            } else {
+                                                                String error = task.getException().getLocalizedMessage();
+                                                                Toast.makeText(DeliveryActivity.this, error, Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                    });
+                                        } else {
+                                            allProductsAvailable = false;
+                                            Toast.makeText(DeliveryActivity.this, "all products may not be available at required quantity ", Toast.LENGTH_SHORT).show();
+                                            break;
+                                            /////// not available
+                                        }
+                                    }
+                                } else {
+                                    String error = task.getException().getLocalizedMessage();
+                                    Toast.makeText(DeliveryActivity.this, error, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        }
+        else{
+            getQtyIds = true;
+        }
+        /////accessing quantity
+
+
         name = DBqueries.adressesModelList.get(DBqueries.selectedAddress).getFullName();
         mobileNo = DBqueries.adressesModelList.get(DBqueries.selectedAddress).getMobileNo();
         fullname.setText(name + "-" + mobileNo);
@@ -279,10 +343,10 @@ public class DeliveryActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-         if(id==android.R.id.home){
-             finish();
-             return true;
-         }
+        if(id==android.R.id.home){
+            finish();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -290,6 +354,16 @@ public class DeliveryActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         loadingDialog.dismiss();
+        if(getQtyIds) {
+            for (int x = 0; x < cartItemModelList.size() - 1; x++) {
+                if(!successResponse) {
+                    for (String qtyIDs : cartItemModelList.get(x).getQtyIDs()) {
+                        firebaseFirestore.collection("PRODUCTS").document(cartItemModelList.get(x).getProductId()).collection("QUANTITY").document(qtyIDs).update("available", true);
+                    }
+                }
+                cartItemModelList.get(x).getQtyIDs().clear();
+            }
+        }
     }
 
     @Override
@@ -302,9 +376,30 @@ public class DeliveryActivity extends AppCompatActivity {
     }
 
     private void showConfirmationLayout(){
-            successResponse = true;
-            codOrderConfirmed = false;
+        successResponse = true;
+        codOrderConfirmed = false;
+        getQtyIds = false;
 
+        for(int x=0;x<cartItemModelList.size()-1;x++){
+            for(String qtyID : cartItemModelList.get(x).getQtyIDs()){
+                firebaseFirestore.collection("PRODUCTS").document(cartItemModelList.get(x).getProductId()).collection("QUANTITY").document(qtyID).update("user_ID",FirebaseAuth.getInstance().getUid());
+                cartItemModelList.get(x).getQtyIDs().remove(qtyID);
+            }
+        }
+
+        if(MainActivity.mainActivity != null){
+            MainActivity.mainActivity.finish();
+            MainActivity.mainActivity = null;
+            MainActivity.showCart = false;
+        }else{
+           MainActivity.resetMainactivity = true;
+        }
+
+        if( ProductDetailActivity.productDetailActivity != null){
+            ProductDetailActivity.productDetailActivity.finish();
+            ProductDetailActivity.productDetailActivity = null;
+        }
+        ////////sent confirmation SMS
         String SMS_API = "https://www.fast2sms.com/dev/bulk";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, SMS_API, new Response.Listener<String>() {
             @Override
@@ -342,68 +437,57 @@ public class DeliveryActivity extends AppCompatActivity {
                 5000,0,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         RequestQueue requestQueue = Volley.newRequestQueue(DeliveryActivity.this);
         requestQueue.add(stringRequest);
+        ////////sent confirmation SMS
 
 
+        if(fromCart){
+            loadingDialog.show();
+            Map<String,Object> updateCartList = new HashMap<>();
+            long cartListSize = 0;
+            final List<Integer> indexList = new ArrayList<>();
 
-            if(MainActivity.mainActivity != null){
-                MainActivity.mainActivity.finish();
-                MainActivity.mainActivity = null;
-                MainActivity.showCart = false;
+            for(int x=0;x<DBqueries.cartList.size();x++){
+                if(!cartItemModelList.get(x).isInStock()) {
+                    updateCartList.put("product_ID_" + cartListSize, cartItemModelList.get(x).getProductId());
+                    cartListSize++;
+                }
+                else{
+                    indexList.add(x);
+                }
             }
+            updateCartList.put("list_size",cartListSize);
 
-            if( ProductDetailActivity.productDetailActivity != null){
-                ProductDetailActivity.productDetailActivity.finish();
-                ProductDetailActivity.productDetailActivity = null;
-            }
-
-            if(fromCart){
-                loadingDialog.show();
-                Map<String,Object> updateCartList = new HashMap<>();
-                long cartListSize = 0;
-                final List<Integer> indexList = new ArrayList<>();
-
-                for(int x=0;x<DBqueries.cartList.size();x++){
-                    if(!cartItemModelList.get(x).isInStock()) {
-                        updateCartList.put("product_ID_" + cartListSize, cartItemModelList.get(x).getProductId());
-                        cartListSize++;
+            FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_DATA").document("MY_CART")
+                    .set(updateCartList).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()){
+                        for(int x=0;x<indexList.size();x++){
+                            DBqueries.cartList.remove(indexList.get(x).intValue());
+                            DBqueries.cartItemModelList.remove(indexList.get(x).intValue());
+                            DBqueries.cartItemModelList.remove(DBqueries.cartItemModelList.size()-1);
+                        }
                     }
                     else{
-                        indexList.add(x);
+                        String error = task.getException().getLocalizedMessage();
+                        Toast.makeText(DeliveryActivity.this,error,Toast.LENGTH_SHORT).show();
                     }
-                }
-                updateCartList.put("list_size",cartListSize);
-
-                FirebaseFirestore.getInstance().collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_DATA").document("MY_CART")
-                        .set(updateCartList).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            for(int x=0;x<indexList.size();x++){
-                                DBqueries.cartList.remove(indexList.get(x).intValue());
-                                DBqueries.cartItemModelList.remove(indexList.get(x).intValue());
-                                DBqueries.cartItemModelList.remove(DBqueries.cartItemModelList.size()-1);
-                            }
-                        }
-                        else{
-                            String error = task.getException().getLocalizedMessage();
-                            Toast.makeText(DeliveryActivity.this,error,Toast.LENGTH_SHORT).show();
-                        }
-                        loadingDialog.dismiss();
-                    }
-                });
-
-            }
-
-            continueBtn.setEnabled(false);
-            changeOrAddNewAddressbtn.setEnabled(false);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-            orderId.setText("Order_ID: "+order_id);
-            orderConfirmation.setVisibility(View.VISIBLE);
-            continueShoppingBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    finish();
+                    loadingDialog.dismiss();
                 }
             });
+
         }
+
+        continueBtn.setEnabled(false);
+        changeOrAddNewAddressbtn.setEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        orderId.setText("Order_ID: "+order_id);
+        orderConfirmation.setVisibility(View.VISIBLE);
+        continueShoppingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
 }

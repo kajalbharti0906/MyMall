@@ -24,6 +24,7 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.List;
 
 import learncodeonline.in.mymall.DBqueries;
+import learncodeonline.in.mymall.MainActivity;
 import learncodeonline.in.mymall.R;
 import learncodeonline.in.mymall.address.DeliveryActivity;
 import learncodeonline.in.mymall.product.ProductDetailActivity;
@@ -207,10 +208,15 @@ public class CartAdapter extends RecyclerView.Adapter {
                             public void onClick(View v) {
                                 if(!TextUtils.isEmpty(quantityNo.getText())) {
                                     if (Long.valueOf(quantityNo.getText().toString()) <= maxQuantity && Long.valueOf(quantityNo.getText().toString()) != 0) {
-                                        if(DeliveryActivity.fromCart) {
+                                        if(itemView.getContext()instanceof MainActivity){
                                             DBqueries.cartItemModelList.get(position).setProductQuantity(Long.valueOf(quantityNo.getText().toString()));
-                                        }else{
-                                            DeliveryActivity.cartItemModelList.get(position).setProductQuantity(Long.valueOf(quantityNo.getText().toString()));
+                                        }
+                                        else {
+                                            if (DeliveryActivity.fromCart) {
+                                                DBqueries.cartItemModelList.get(position).setProductQuantity(Long.valueOf(quantityNo.getText().toString()));
+                                            } else {
+                                                DeliveryActivity.cartItemModelList.get(position).setProductQuantity(Long.valueOf(quantityNo.getText().toString()));
+                                            }
                                         }
                                         productQuantity.setText("Qty: " + quantityNo.getText());
                                         quantityDialog.dismiss();

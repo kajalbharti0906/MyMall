@@ -562,6 +562,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                             (long) 0,
                             (boolean) documentSnapshot.get("in_stock")));
                     DeliveryActivity.cartItemModelList.add(new CartItemModel(CartItemModel.TOTAL_AMOUNT));
+
                     if(DBqueries.adressesModelList.size()==0) {
                         DBqueries.loadAddresses(ProductDetailActivity.this, loadingDialog);
                     }else{
