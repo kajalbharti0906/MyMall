@@ -27,12 +27,14 @@ public class CartItemModel {
     private Long freeCoupon;
     private Long productQuantity;
     private Long maxQuantity;
+    private Long stockQuantity;
     private Long offersApplied;
     private Long couponsApplied;
     private boolean inStock;
     private List<String> qtyIDs;
+    private boolean qtyError;
 
-    public CartItemModel(int type, String productID, String productImage, String productTitle, String productPrice, String cuttedPrice, Long freeCoupon, Long productQuantity, Long maxQuantity, Long offersApplied, Long couponsApplied, boolean inStock) {
+    public CartItemModel(int type, String productID, String productImage, String productTitle, String productPrice, String cuttedPrice, Long freeCoupon, Long productQuantity, Long maxQuantity, Long stockQuantity, Long offersApplied, Long couponsApplied, boolean inStock) {
         this.type = type;
         this.productID = productID;
         this.productImage = productImage;
@@ -42,10 +44,20 @@ public class CartItemModel {
         this.freeCoupon = freeCoupon;
         this.productQuantity = productQuantity;
         this.maxQuantity = maxQuantity;
+        this.stockQuantity = stockQuantity;
         this.offersApplied = offersApplied;
         this.couponsApplied = couponsApplied;
         this.inStock = inStock;
         qtyIDs = new ArrayList<>();
+        qtyError = false;
+    }
+
+    public boolean isQtyError() {
+        return qtyError;
+    }
+
+    public void setQtyError(boolean qtyError) {
+        this.qtyError = qtyError;
     }
 
     public List<String> getQtyIDs() {
@@ -120,6 +132,14 @@ public class CartItemModel {
         this.maxQuantity = maxQuantity;
     }
 
+    public Long getStockQuantity() {
+        return stockQuantity;
+    }
+
+    public void setStockQuantity(Long stockQuantity) {
+        this.stockQuantity = stockQuantity;
+    }
+
     public Long getOffersApplied() {
         return offersApplied;
     }
@@ -150,6 +170,7 @@ public class CartItemModel {
     public CartItemModel(int type) {
         this.type = type;
     }
+
 
     //////////cart total
 }
