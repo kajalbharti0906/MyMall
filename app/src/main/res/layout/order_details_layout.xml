@@ -2,13 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/order_packed_progress_bar"
-    android:background="@color/colorAccent"
-    android:elevation="3dp"
-    android:layout_marginBottom="4dp"
-    android:layout_marginTop="4dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    android:background="@color/colorAccent"
+    android:elevation="3dp"
     android:orientation="vertical">
 
     <ImageView
@@ -81,15 +80,15 @@
         app:srcCompat="@drawable/selected_dot" />
 
     <ProgressBar
-        android:id="@+id/ordered_packed_progress_bar"
+        android:id="@+id/ordered_packed_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="60dp"
         android:layout_height="3dp"
         android:layout_marginStart="9dp"
         android:layout_marginTop="8dp"
         android:progress="0"
-        android:progressTint="@color/successGreen"
         android:progressBackgroundTint="@color/RecyclerViewBackground"
+        android:progressTint="@color/successGreen"
         android:rotation="90"
         android:transformPivotX="0dp"
         app:layout_constraintStart_toStartOf="@+id/ordered_indicator"
@@ -107,15 +106,15 @@
         app:srcCompat="@drawable/selected_dot" />
 
     <ProgressBar
-        android:id="@+id/packed_shipped_progress_bar"
+        android:id="@+id/packed_shipped_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="60dp"
         android:layout_height="3dp"
         android:layout_marginStart="9dp"
         android:layout_marginTop="8dp"
         android:progress="0"
-        android:progressTint="@color/successGreen"
         android:progressBackgroundTint="@color/RecyclerViewBackground"
+        android:progressTint="@color/successGreen"
         android:rotation="90"
         android:transformPivotX="0dp"
         app:layout_constraintStart_toStartOf="@+id/packed_indicator"
@@ -133,15 +132,15 @@
         app:srcCompat="@drawable/selected_dot" />
 
     <ProgressBar
-        android:id="@+id/shipped_delivered_progress_bar"
+        android:id="@+id/shipped_delivered_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="60dp"
         android:layout_height="3dp"
         android:layout_marginStart="9dp"
         android:layout_marginTop="8dp"
         android:progress="0"
-        android:progressTint="@color/successGreen"
         android:progressBackgroundTint="@color/RecyclerViewBackground"
+        android:progressTint="@color/successGreen"
         android:rotation="90"
         android:transformPivotX="0dp"
         app:layout_constraintStart_toStartOf="@+id/shipped_indicator"
@@ -154,6 +153,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="50dp"
         android:tint="@color/RecyclerViewBackground"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/shipped_indicator"
         app:srcCompat="@drawable/selected_dot" />
@@ -188,8 +188,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Your order has been placed"
-        android:textSize="10sp"
         android:textColor="#000000"
+        android:textSize="10sp"
         app:layout_constraintStart_toStartOf="@+id/ordered_title"
         app:layout_constraintTop_toBottomOf="@+id/ordered_title" />
 
@@ -222,8 +222,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Your order has been placed"
-        android:textSize="10sp"
         android:textColor="#000000"
+        android:textSize="10sp"
         app:layout_constraintStart_toStartOf="@+id/packed_title"
         app:layout_constraintTop_toBottomOf="@+id/packed_title" />
 
@@ -255,8 +255,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Your order has been placed"
-        android:textSize="10sp"
         android:textColor="#000000"
+        android:textSize="10sp"
         app:layout_constraintStart_toStartOf="@+id/shipped_title"
         app:layout_constraintTop_toBottomOf="@+id/shipped_title" />
 
@@ -289,8 +289,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Your order has been placed"
-        android:textSize="10sp"
         android:textColor="#000000"
+        android:textSize="10sp"
         app:layout_constraintStart_toStartOf="@+id/delivered_title"
         app:layout_constraintTop_toBottomOf="@+id/delivered_title" />
 
@@ -363,7 +363,7 @@
         android:id="@+id/divider12"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:background="?android:attr/listDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

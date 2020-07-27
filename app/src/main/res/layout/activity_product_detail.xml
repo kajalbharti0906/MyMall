@@ -82,16 +82,18 @@
                 android:drawableTint="#485F70"
                 android:textColor="#485F70"/>
         </LinearLayout>
+
         <Button
             android:id="@+id/buy_now_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="buy now"
-            android:stateListAnimator="@null"
+            android:layout_weight="1"
             android:background="@color/colorPrimary"
+            android:stateListAnimator="@null"
+            android:text="buy now"
             android:textColor="@color/colorAccent"
-            android:textStyle="bold"
             android:textSize="16sp"
-            android:layout_weight="1"/>
+            android:textStyle="bold"
+            android:visibility="gone" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

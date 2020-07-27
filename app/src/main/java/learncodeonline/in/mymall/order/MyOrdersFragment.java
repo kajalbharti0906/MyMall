@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import learncodeonline.in.mymall.DBqueries;
 import learncodeonline.in.mymall.R;
 
 
@@ -23,6 +24,7 @@ import learncodeonline.in.mymall.R;
 public class MyOrdersFragment extends Fragment {
 
     private RecyclerView myorderRecyclerView;
+    public static MyOrderAdapter myOrderAdapter;
 
     public MyOrdersFragment() {
         // Required empty public constructor
@@ -39,18 +41,18 @@ public class MyOrdersFragment extends Fragment {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         myorderRecyclerView.setLayoutManager(layoutManager);
 
-        List<MyOrderItemModel> myOrderItemModelList = new ArrayList<>();
-        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.mobile_phone,2,"Pixel 2XL (BLACK)","Delivered on Mon,27 April 2020"));
-        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.mobile_phone,0,"Pixel 2XL (BLACK)","Delivered on Tue,21 April 2020"));
-        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.mobile_phone,4,"Pixel 2XL (BLACK)","Delivered on Tue,28 April 2020"));
-        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.mobile_phone,1,"Pixel 2XL (BLACK)","Delivered on Sun,26 April 2020"));
-        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.mobile_phone,3,"Pixel 2XL (BLACK)","Delivered on Mon,27 April 2020"));
-        myOrderItemModelList.add(new MyOrderItemModel(R.drawable.mobile_phone,2,"Pixel 2XL (BLACK)","Delivered on Wed,29 April 2020"));
 
-        MyOrderAdapter myOrderAdapter = new MyOrderAdapter(myOrderItemModelList);
+        myOrderAdapter = new MyOrderAdapter(DBqueries.myOrderItemModelList);
         myorderRecyclerView.setAdapter(myOrderAdapter);
-        myOrderAdapter.notifyDataSetChanged();
+
+        DBqueries.loadOrders(getContext(),myOrderAdapter);
+
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        myOrderAdapter.notifyDataSetChanged();
+    }
 }

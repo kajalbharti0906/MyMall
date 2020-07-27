@@ -1,6 +1,7 @@
 package learncodeonline.in.mymall.reward;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,9 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import learncodeonline.in.mymall.DBqueries;
 import learncodeonline.in.mymall.R;
 
 
@@ -28,29 +27,38 @@ public class MyRewardsFragment extends Fragment {
     }
 
     private RecyclerView myrewardRecyclerView;
+    private Dialog loadingDialog;
+    public static RewardAdapter rewardAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_my_rewards, container, false);
+
+        /////// loading dialog
+        loadingDialog = new Dialog(getContext());
+        loadingDialog.setContentView(R.layout.loading_progress_dialog);
+        loadingDialog.setCancelable(false);
+        loadingDialog.getWindow().setBackgroundDrawable(getContext().getDrawable(R.drawable.slider_background));
+        loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        loadingDialog.show();
+        /////// loading dialog
+
         myrewardRecyclerView = view.findViewById(R.id.my_rewards_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         myrewardRecyclerView.setLayoutManager(layoutManager);
 
-        List<RewardModel> rewardModelList = new ArrayList<>();
-        rewardModelList.add(new RewardModel("Rewards","till 29th August,2019","Get 20% OFF on any product between Rs.500/- to Rs.2500/-"));
-        rewardModelList.add(new RewardModel("Rewards","till 29th August,2019","Get 20% OFF on any product between Rs.500/- to Rs.2500/-"));
-        rewardModelList.add(new RewardModel("Rewards","till 29th August,2019","Get 20% OFF on any product between Rs.500/- to Rs.2500/-"));
-        rewardModelList.add(new RewardModel("Rewards","till 29th August,2019","Get 20% OFF on any product between Rs.500/- to Rs.2500/-"));
-        rewardModelList.add(new RewardModel("Rewards","till 29th August,2019","Get 20% OFF on any product between Rs.500/- to Rs.2500/-"));
-        rewardModelList.add(new RewardModel("Rewards","till 29th August,2019","Get 20% OFF on any product between Rs.500/- to Rs.2500/-"));
-        rewardModelList.add(new RewardModel("Rewards","till 29th August,2019","Get 20% OFF on any product between Rs.500/- to Rs.2500/-"));
-        rewardModelList.add(new RewardModel("Rewards","till 29th August,2019","Get 20% OFF on any product between Rs.500/- to Rs.2500/-"));
-        rewardModelList.add(new RewardModel("Rewards","till 29th August,2019","Get 20% OFF on any product between Rs.500/- to Rs.2500/-"));
 
-        RewardAdapter rewardAdapter = new RewardAdapter(rewardModelList,false);
+        if(DBqueries.rewardModelList.size()==0){
+            DBqueries.loadRewards(getContext(),loadingDialog, true);
+        }else{
+            loadingDialog.dismiss();
+        }
+
+
+        rewardAdapter = new RewardAdapter(DBqueries.rewardModelList,false);
         myrewardRecyclerView.setAdapter(rewardAdapter);
         rewardAdapter.notifyDataSetChanged();
 

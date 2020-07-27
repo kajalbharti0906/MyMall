@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,8 @@ import java.util.ArrayList;
 import learncodeonline.in.mymall.DBqueries;
 import learncodeonline.in.mymall.R;
 import learncodeonline.in.mymall.address.DeliveryActivity;
+import learncodeonline.in.mymall.reward.MyRewardsFragment;
+import learncodeonline.in.mymall.reward.RewardModel;
 
 
 /**
@@ -100,6 +103,10 @@ public class MyCartFragment extends Fragment {
     public void onStart() {
         super.onStart();
         cartAdapter.notifyDataSetChanged();
+        if(DBqueries.rewardModelList.size()==0){
+            loadingDialog.show();
+            DBqueries.loadRewards(getContext(),loadingDialog,false);
+        }
         if(DBqueries.cartItemModelList.size() == 0){
             DBqueries.cartList.clear();
             DBqueries.loadCartList(getContext(),loadingDialog , true, new TextView(getContext()), totalAmount);
@@ -111,6 +118,24 @@ public class MyCartFragment extends Fragment {
 
             }
             loadingDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        for(CartItemModel cartItemModel : DBqueries.cartItemModelList){
+            if(!TextUtils.isEmpty(cartItemModel.getSelectedCouponId())){
+                for (RewardModel rewardModel : DBqueries.rewardModelList) {
+                    if(rewardModel.getCouponId().equals(cartItemModel.getSelectedCouponId())){
+                        rewardModel.setAlreadyUsed(false);
+                    }
+                }
+                cartItemModel.setSelectedCouponId(null);
+                if(MyRewardsFragment.rewardAdapter != null) {
+                    MyRewardsFragment.rewardAdapter.notifyDataSetChanged();
+                }
+            }
         }
     }
 }

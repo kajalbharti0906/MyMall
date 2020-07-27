@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,6 +25,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +42,12 @@ import learncodeonline.in.mymall.home.HomePageAdapter;
 import learncodeonline.in.mymall.home.HomePageModel;
 import learncodeonline.in.mymall.home.HorizontalProductScrollModel;
 import learncodeonline.in.mymall.home.SliderModel;
+import learncodeonline.in.mymall.order.MyOrderAdapter;
+import learncodeonline.in.mymall.order.MyOrderItemModel;
+import learncodeonline.in.mymall.order.MyOrdersFragment;
 import learncodeonline.in.mymall.product.ProductDetailActivity;
+import learncodeonline.in.mymall.reward.MyRewardsFragment;
+import learncodeonline.in.mymall.reward.RewardModel;
 import learncodeonline.in.mymall.wishlist.MyWishlistFragment;
 import learncodeonline.in.mymall.wishlist.WishlistModel;
 
@@ -66,6 +74,10 @@ public class DBqueries {
 
     public static int selectedAddress = -1;
     public static List<AdressesModel> adressesModelList = new ArrayList<>();
+
+    public static List<RewardModel> rewardModelList = new ArrayList<>();
+
+    public static List<MyOrderItemModel> myOrderItemModelList = new ArrayList<>();
 
     public static void loadCategories(final RecyclerView categoryRecyclerView, final CategoryAdapter categoryAdapter, final Context context){
 
@@ -304,6 +316,12 @@ public class DBqueries {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
+                        List<String> orderProductIds = new ArrayList<>();
+                        for(int x=0;x<myOrderItemModelList.size();x++){
+                            orderProductIds.add(myOrderItemModelList.get(x).getProductId());
+                        }
+
+
                         for (long x = 0; x < (long) task.getResult().get("list_size"); x++) {
                             myRatedIds.add(task.getResult().get("product_ID_" + x).toString());
                             myRating.add((long) task.getResult().get("rating_" + x));
@@ -316,6 +334,12 @@ public class DBqueries {
 
                             }
 
+                            if(orderProductIds.contains(task.getResult().get("product_ID_" + x).toString())){
+                                myOrderItemModelList.get(orderProductIds.indexOf(task.getResult().get("product_ID_" + x).toString())).setRating(Integer.parseInt(String.valueOf((long) task.getResult().get("rating_" + x))) - 1);
+                            }
+                        }
+                        if(MyOrdersFragment.myOrderAdapter != null){
+                            MyOrdersFragment.myOrderAdapter.notifyDataSetChanged();
                         }
 
                     } else {
@@ -373,7 +397,7 @@ public class DBqueries {
                                                                         (long) 1,
                                                                         (long) documentSnapshot.get("max_quantity"),
                                                                         (long) documentSnapshot.get("stock_quantity"),
-                                                                        (long) 0,
+                                                                        (long) documentSnapshot.get("offers_applied"),
                                                                         (long) 0,
                                                                         true));
 
@@ -387,7 +411,7 @@ public class DBqueries {
                                                                         (long) 1,
                                                                         (long) documentSnapshot.get("max_quantity"),
                                                                         (long) documentSnapshot.get("stock_quantity"),
-                                                                        (long) 0,
+                                                                        (long) documentSnapshot.get("offers_applied"),
                                                                         (long) 0,
                                                                         false));
                                                             }
@@ -516,6 +540,126 @@ public class DBqueries {
         });
     }
 
+    public static void loadRewards(final Context context, final Dialog loadingDialog, final boolean onRewardFragment){
+        rewardModelList.clear();
+
+        firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            final Date lastseenDate = task.getResult().getDate("Last seen");
+                            Log.i("kajal",lastseenDate.toString());
+
+                            firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_REWARDS").get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                                    if (documentSnapshot.get("type").toString().equals("Discount") && lastseenDate.before(documentSnapshot.getDate("validity"))) {
+                                                        rewardModelList.add(new RewardModel(documentSnapshot.getId(),
+                                                                documentSnapshot.get("type").toString(),
+                                                                documentSnapshot.get("lower_limit").toString(),
+                                                                documentSnapshot.get("upper_limit").toString(),
+                                                                documentSnapshot.get("percentage").toString(),
+                                                                documentSnapshot.get("body").toString(),
+                                                                (Timestamp) documentSnapshot.get("validity"),
+                                                                (boolean)documentSnapshot.get("already_used")
+                                                                ));
+                                                    } else if(documentSnapshot.get("type").toString().equals("Flat Rs.*OFF") && lastseenDate.before(documentSnapshot.getDate("validity"))) {
+                                                        rewardModelList.add(new RewardModel(documentSnapshot.getId(),
+                                                                documentSnapshot.get("type").toString(),
+                                                                documentSnapshot.get("lower_limit").toString(),
+                                                                documentSnapshot.get("upper_limit").toString(),
+                                                                documentSnapshot.get("amount").toString(),
+                                                                documentSnapshot.get("body").toString(),
+                                                                (Timestamp) documentSnapshot.get("validity"),
+                                                                (boolean)documentSnapshot.get("already_used")
+                                                                ));
+                                                    }
+                                                }
+                                                if(onRewardFragment) {
+                                                    MyRewardsFragment.rewardAdapter.notifyDataSetChanged();
+                                                }
+                                            } else {
+                                                String error = task.getException().getMessage();
+                                                Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                                            }
+                                            loadingDialog.dismiss();
+                                        }
+                                    });
+                        }else{
+                            loadingDialog.dismiss();
+                            String error = task.getException().getMessage();
+                            Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+
+    }
+
+    public static void loadOrders(final Context context, final MyOrderAdapter myOrderAdapter){
+        myOrderItemModelList.clear();
+        firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_ORDERS")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+               if(task.isSuccessful()){
+                   for(DocumentSnapshot documentSnapshot : task.getResult().getDocuments()){
+
+                       firebaseFirestore.collection("ORDERS").document((String) documentSnapshot.get("order_id")).collection("OrderItems")
+                               .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                           @Override
+                           public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                               if(task.isSuccessful()){
+                                   for(DocumentSnapshot orderItems : task.getResult().getDocuments()){
+
+                                       final MyOrderItemModel myOrderItemModel = new MyOrderItemModel(orderItems.getString("Product Id"),
+                                               orderItems.getString("Order Status"),
+                                               orderItems.getString("Address"),
+                                               orderItems.getString("Coupon Id"),
+                                               orderItems.getString("Cutted Price"),
+                                               orderItems.getDate("Ordered date"),
+                                               orderItems.getDate("Packed date"),
+                                               orderItems.getDate("Shipped date"),
+                                               orderItems.getDate("Delivered date"),
+                                               orderItems.getDate("Cancelled date"),
+                                               orderItems.getString("Discounted Price"),
+                                               orderItems.getLong("Free Coupons"),
+                                               orderItems.getString("FullName"),
+                                               orderItems.getString("ORDER ID"),
+                                               orderItems.getString("Payment Method"),
+                                               orderItems.getString("Pincode"),
+                                               orderItems.getString("Product Price"),
+                                               orderItems.getLong("Product Quantity"),
+                                               orderItems.getString("User Id"),
+                                               orderItems.getString("Product Image"),
+                                               orderItems.getString("Product Title"),
+                                               orderItems.getString("Delivery Price"));
+
+                                       myOrderItemModelList.add(myOrderItemModel);
+                                   }
+
+                                   loadRatingsList(context);
+                                   myOrderAdapter.notifyDataSetChanged();
+                               }
+                               else{
+                                   String error = task.getException().getMessage();
+                                   Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                               }
+                           }
+                       });
+                   }
+               }
+               else{
+                   String error = task.getException().getMessage();
+                   Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+               }
+            }
+        });
+    }
 
     public static void clearData(){
         categoryModelList.clear();
@@ -528,5 +672,7 @@ public class DBqueries {
         myRatedIds.clear();
         myRating.clear();
         adressesModelList.clear();
+        rewardModelList.clear();
+        myOrderItemModelList.clear();
     }
 }
