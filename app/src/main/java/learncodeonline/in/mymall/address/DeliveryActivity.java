@@ -80,6 +80,8 @@ public class DeliveryActivity extends AppCompatActivity {
     private Button continueBtn;
     public static Dialog loadingDialog;
     private Dialog paymentMethodDialog;
+    private TextView codTitle;
+    private View divider;
     private ImageButton paytm,cod;
     private String paymentMethod = "PAYTM";
     private ConstraintLayout orderConfirmation;
@@ -129,6 +131,7 @@ public class DeliveryActivity extends AppCompatActivity {
         loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         /////// loading dialog
 
+
         /////// paymentMethod dialog
         paymentMethodDialog = new Dialog(DeliveryActivity.this);
         paymentMethodDialog.setContentView(R.layout.payment_method);
@@ -137,6 +140,8 @@ public class DeliveryActivity extends AppCompatActivity {
         paymentMethodDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         paytm = paymentMethodDialog.findViewById(R.id.paytm);
         cod = paymentMethodDialog.findViewById(R.id.cod_btn);
+        codTitle = paymentMethodDialog.findViewById(R.id.cod_btn_title);
+        divider = paymentMethodDialog.findViewById(R.id.divider);
         /////// paymentMethod dialog
         order_id = UUID.randomUUID().toString().substring(0,28);
 
@@ -166,6 +171,21 @@ public class DeliveryActivity extends AppCompatActivity {
                 for(CartItemModel cartItemModel:cartItemModelList){
                     if(cartItemModel.isQtyError()){
                         allProductAvailable = false;
+                        break;
+                    }
+                    if(cartItemModel.getType() == cartItemModel.CART_ITEM) {
+                        if (!cartItemModel.isCOD()) {
+                            cod.setEnabled(false);
+                            cod.setAlpha(0.5f);
+                            codTitle.setAlpha(0.5f);
+                            divider.setVisibility(View.GONE);
+                            break;
+                        } else {
+                            cod.setEnabled(true);
+                            cod.setAlpha(1f);
+                            codTitle.setAlpha(1f);
+                            divider.setVisibility(View.VISIBLE);
+                        }
                     }
                 }
                 if(allProductAvailable){
