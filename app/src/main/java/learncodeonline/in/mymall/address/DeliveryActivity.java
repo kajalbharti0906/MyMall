@@ -514,7 +514,8 @@ public class DeliveryActivity extends AppCompatActivity {
                 orderDetails.put("FullName",fullname.getText());
                 orderDetails.put("Pincode",pincode.getText());
                 orderDetails.put("Free Coupons",cartItemModel.getFreeCoupon());
-                orderDetails.put("Delivery Price",cartItemModel.getDeliveryPrice());
+                orderDetails.put("Delivery Price",cartItemModelList.get(cartItemModelList.size()-1).getDeliveryPrice());
+                orderDetails.put("Cancellation Requested",false);
 
                 firebaseFirestore.collection("ORDERS").document(order_id).collection("OrderItems").document(cartItemModel.getProductId())
                 .set(orderDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -606,6 +607,7 @@ public class DeliveryActivity extends AppCompatActivity {
                                                     if (task.isSuccessful()) {
                                                         Map<String,Object> userOrder = new HashMap<>();
                                                         userOrder.put("order_id",order_id);
+                                                        userOrder.put("time",FieldValue.serverTimestamp());
                                                         firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_ORDERS").document(order_id)
                                                                 .set(userOrder).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override

@@ -604,7 +604,7 @@ public class DBqueries {
 
     public static void loadOrders(final Context context, final MyOrderAdapter myOrderAdapter, final Dialog loadingDialog){
         myOrderItemModelList.clear();
-        firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_ORDERS")
+        firebaseFirestore.collection("USERS").document(FirebaseAuth.getInstance().getUid()).collection("USER_ORDERS").orderBy("time", Query.Direction.DESCENDING)
                 .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -639,7 +639,8 @@ public class DBqueries {
                                                orderItems.getString("User Id"),
                                                orderItems.getString("Product Image"),
                                                orderItems.getString("Product Title"),
-                                               orderItems.getString("Delivery Price"));
+                                               orderItems.getString("Delivery Price"),
+                                               orderItems.getBoolean("Cancellation Requested"));
 
                                        myOrderItemModelList.add(myOrderItemModel);
                                    }

@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -52,8 +53,9 @@ public class OrderDetailActivity extends AppCompatActivity {
     private int rating;
     private TextView fullName,address,pincode;
     private TextView totalItems,totalItemPrice,deliveryPrice,totalAmount,savedAmount;
-    private Dialog loadingDialog;
+    private Dialog loadingDialog,cancelDialog;
     private SimpleDateFormat simpleDateFormat;
+    private Button cancelOrderBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,14 @@ public class OrderDetailActivity extends AppCompatActivity {
         loadingDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         /////// loading dialog
 
+        /////// cancel dialog
+        cancelDialog = new Dialog(OrderDetailActivity.this);
+        cancelDialog.setContentView(R.layout.order_cancel_dialog);
+        cancelDialog.setCancelable(true);
+        cancelDialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.slider_background));
+       // cancelDialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        /////// cancel dialog
+
         position = getIntent().getIntExtra("Position",-1);
         final MyOrderItemModel model = DBqueries.myOrderItemModelList.get(position);
 
@@ -81,6 +91,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         quantity = findViewById(R.id.product_quantity);
 
         productImage = findViewById(R.id.product_image);
+        cancelOrderBtn = findViewById(R.id.cancel_btn);
 
         orderedIndicator = findViewById(R.id.ordered_indicator);
         packedIndicator = findViewById(R.id.packed_indicator);
@@ -372,6 +383,73 @@ public class OrderDetailActivity extends AppCompatActivity {
             });
         }
         ////////rating layout
+
+        if(model.isCancellationRequested()){
+            cancelOrderBtn.setVisibility(View.VISIBLE);
+            cancelOrderBtn.setEnabled(false);
+            cancelOrderBtn.setText("Cancellation in process.");
+            cancelOrderBtn.setTextColor(getResources().getColor(R.color.colorPrimary));
+            cancelOrderBtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffffff")));
+        }else{
+            if(model.getOrderStatus().equals("Ordered") || model.getOrderStatus().equals("Packed")){
+                cancelOrderBtn.setVisibility(View.VISIBLE);
+                cancelOrderBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        cancelDialog.findViewById(R.id.no_btn).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                cancelDialog.dismiss();
+                            }
+                        });
+                        cancelDialog.findViewById(R.id.yes_btn).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                cancelDialog.dismiss();
+                                loadingDialog.show();
+                                Map<String,Object> map = new HashMap<>();
+                                map.put("Order Id",model.getOrderId());
+                                map.put("Product Id",model.getProductId());
+                                map.put("Cancelled Order",false);
+                                FirebaseFirestore.getInstance().collection("CANCELLED ORDERS").document()
+                                        .set(map).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            FirebaseFirestore.getInstance().collection("ORDERS").document(model.getOrderId()).collection("OrderItems").document(model.getProductId())
+                                                    .update("Cancellation Requested",true).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                   if(task.isSuccessful()){
+                                                       model.setCancellationRequested(false);
+                                                       cancelOrderBtn.setEnabled(false);
+                                                       cancelOrderBtn.setText("Cancellation in process.");
+                                                       cancelOrderBtn.setTextColor(getResources().getColor(R.color.colorPrimary));
+                                                       cancelOrderBtn.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#ffffff")));
+                                                   }
+                                                   else{
+                                                       String error = task.getException().getMessage();
+                                                       Toast.makeText(OrderDetailActivity.this, error, Toast.LENGTH_SHORT).show();
+                                                   }
+                                                    loadingDialog.dismiss();
+                                                }
+                                            });
+                                        }
+                                        else{
+                                            loadingDialog.dismiss();
+                                            String error = task.getException().getMessage();
+                                            Toast.makeText(OrderDetailActivity.this, error, Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                        cancelDialog.show();
+                    }
+                });
+            }
+        }
 
         fullName.setText(model.getFullName());
         address.setText(model.getAddress());
