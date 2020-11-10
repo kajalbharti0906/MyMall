@@ -58,6 +58,9 @@ public class DBqueries {
 
 
     public static FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+
+    public static String email,fullname,profile;
+
     public static List<CategoryModel> categoryModelList = new ArrayList<CategoryModel>();
 
     public static List<List<HomePageModel>> lists = new ArrayList<>();

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -14,10 +15,14 @@ import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -33,6 +38,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import learncodeonline.in.mymall.address.MyAccountFragment;
 import learncodeonline.in.mymall.authentication.RegisterActivity;
@@ -150,10 +156,26 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
+        Log.i("kajal","kajal_bharti");
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
             navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(false);
         } else {
+            FirebaseFirestore.getInstance().collection("USERS").document(currentUser.getUid())
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if(task.isSuccessful()){
+                        DBqueries.fullname = task.getResult().getString("fullname");
+                        DBqueries.email = task.getResult().getString("email");
+                        DBqueries.profile = task.getResult().getString("profile");
+                    }
+                    else{
+                        String error = task.getException().getMessage();
+                        Toast.makeText(MainActivity.this, error, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
             navigationView.getMenu().getItem(navigationView.getMenu().size() - 1).setEnabled(true);
         }
         if(resetMainactivity){

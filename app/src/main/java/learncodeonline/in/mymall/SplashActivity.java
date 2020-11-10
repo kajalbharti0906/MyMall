@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,32 +33,31 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
 
-        if(currentUser != null){
+        if(currentUser == null){
             Intent registerIntent = new Intent(SplashActivity.this, RegisterActivity.class);
             startActivity(registerIntent);
             finish();
         }else{
 
             FirebaseFirestore.getInstance().collection("USERS").document(currentUser.getUid()).update("Last seen", FieldValue.serverTimestamp())
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
-                                Intent mainIntent = new Intent(SplashActivity.this,  MainActivity.class);
-                                startActivity(mainIntent);
-                                finish();
-                            }else{
-                                String error = task.getException().getMessage();
-                                Toast.makeText(SplashActivity.this, error, Toast.LENGTH_SHORT).show();
-                            }
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+
+                            Intent mainIntent = new Intent(SplashActivity.this,  MainActivity.class);
+                            startActivity(mainIntent);
+                            finish();
+                        }else{
+                            String error = task.getException().getMessage();
+                            Toast.makeText(SplashActivity.this, error, Toast.LENGTH_SHORT).show();
+                            //Log.i("perul",error.toString());
                         }
-                    });
 
-
-        }
-
+                    }
+                });
+    }
     }
 }
