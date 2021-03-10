@@ -473,6 +473,7 @@ public class DeliveryActivity extends AppCompatActivity {
     private void placeOrderDetails(){
 
         String userID = FirebaseAuth.getInstance().getUid();
+        // Log.i("kajal",userID);
         loadingDialog.show();
         for(CartItemModel cartItemModel : cartItemModelList) {
             if(cartItemModel.getType() == cartItemModel.CART_ITEM) {
@@ -565,7 +566,7 @@ public class DeliveryActivity extends AppCompatActivity {
         }
         final String M_id = "EdzfDp00596156443974";
         final String customer_id = FirebaseAuth.getInstance().getUid();
-        final String url = "https://mycollegemall.000webhostapp.com/Paytm/generateChecksum.php";
+        final String url = "https://my-shopping-mall.000webhostapp.com/Paytm/generateChecksum.php";
         final String callBackUrl = "https://pguat.paytm.com/paytmchecksum/paytmCallback.jsp";
 
         RequestQueue requestQueue = Volley.newRequestQueue(DeliveryActivity.this);
